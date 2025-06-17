@@ -8,11 +8,11 @@
         <flux:breadcrumbs.item>
             Facturas
         </flux:breadcrumbs.item>
-    </flux:breadcrumbs> 
+    </flux:breadcrumbs>
 
     <a href="{{route('invoices.create')}}" class="btn btn-primary text-s px-6 py-2 rounded-lg">
         Nueva Factura
-    </a> 
+    </a>
 </div>
 
 <div>
@@ -94,7 +94,7 @@
                             </form>
                         </div>
                     </td>
-                </tr>      
+                </tr>
             @endforeach
         </tbody>
     </table>
@@ -105,7 +105,7 @@
     </div>
 
     @push('js')
-        <script src="{{ mix('js/deleteConfirmation.js') }}"></script> 
+        <script src="{{ mix('js/deleteConfirmation.js') }}"></script>
     @endpush
 
 </x-layouts.app>

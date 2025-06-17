@@ -16,29 +16,31 @@ use Livewire\Component;
 class Login extends Component
 {
     #[Validate('required|string|email')]
-    public string $email = '';
+    public string $correo = '';
 
-    #[Validate('required|string')]
+    #[Validate('required|string|min:6')]
     public string $password = '';
 
     public bool $remember = false;
 
-    /**
-     * Handle an incoming authentication request.
-     */
     public function login(): void
     {
         $this->validate();
 
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+        $user = \App\Models\Usuario::where('correo', $this->correo)->first();
+
+        if (! $user || ! $user->checkPassword($this->password)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                'correo' => __('auth.failed'),
             ]);
         }
+
+        // Login manual con login del usuario encontrado
+        Auth::login($user, $this->remember);
 
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
@@ -46,12 +48,9 @@ class Login extends Component
         $this->redirect(route('dashboard', absolute: false));
     }
 
-    /**
-     * Ensure the authentication request is not rate limited.
-     */
     protected function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -60,18 +59,20 @@ class Login extends Component
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => __('auth.throttle', [
+            'correo' => __('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
         ]);
     }
 
-    /**
-     * Get the authentication rate limiting throttle key.
-     */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->correo) . '|' . request()->ip());
+    }
+
+    public function render()
+    {
+        return view('livewire.auth.login');
     }
 }

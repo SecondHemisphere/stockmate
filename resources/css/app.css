@@ -1,5 +1,8 @@
-@import  "../css/components.css";
+/* Importa la fuente Playpen Sans */
+@import url('https://fonts.googleapis.com/css2?family=Playpen+Sans&display=swap');
 
+/* Importaciones previas */
+@import "../css/components.css";
 @import 'tailwindcss';
 @import '../../vendor/livewire/flux/dist/flux.css';
 
@@ -10,8 +13,10 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Definición global de tema con la fuente Playpen Sans */
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Playpen Sans', ui-sans-serif, system-ui, sans-serif, 
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
     --color-zinc-50: #fafafa;
     --color-zinc-100: #f5f5f5;
@@ -30,6 +35,7 @@
     --color-accent-foreground: var(--color-white);
 }
 
+/* Ajustes para modo oscuro */
 @layer theme {
     .dark {
         --color-accent: var(--color-white);
@@ -38,7 +44,11 @@
     }
 }
 
+/* Estilos base globales */
 @layer base {
+    body {
+        font-family: var(--font-sans);
+    }
 
     *,
     ::after,
@@ -49,12 +59,13 @@
     }
 }
 
+/* Estilos para livewire flux */
 [data-flux-field]:not(ui-radio) {
     @apply grid gap-2;
 }
 
 [data-flux-label] {
-    @apply  !mb-0 !leading-tight;
+    @apply !mb-0 !leading-tight;
 }
 
 input:focus[data-flux-control],

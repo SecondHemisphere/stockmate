@@ -15,7 +15,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="flex items-center gap-2">
                         <label class="invoice-label min-w-[70px]" for="customer_id">Cliente:</label>
-                        <select class="flex-1 border-gray-300 rounded-md" id="customer-select" name="customer_id" placeholder="Selecciona un cliente...">                    
+                        <select class="flex-1 border-gray-300 rounded-md" id="customer-select" name="customer_id" placeholder="Selecciona un cliente...">
                             @if(old('customer_id'))
                                 <option value="{{ old('customer_id') }}" selected>
                                     {{ \App\Models\Customer::find(old('customer_id'))->name ?? 'Cliente seleccionado' }}
@@ -298,7 +298,6 @@
 </script>
 <style>
     body {
-        font-family: 'Georgia', 'Times New Roman', serif;
         background-color: #f7f5f2; 
         color: #3d3d3d;
     }

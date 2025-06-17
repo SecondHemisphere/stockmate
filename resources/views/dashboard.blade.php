@@ -13,7 +13,7 @@
             <i class="fas fa-exclamation-triangle text-4xl text-white"></i>
             <div>
                 <div class="text-lg font-semibold">Stock Crítico</div>
-                <div class="text-3xl font-bold">{{ $totalCriticalStock }}</div>
+                <div class="text-3xl font-bold"> 1 </div>
             </div>
         </div>
 
@@ -22,7 +22,7 @@
             <i class="fas fa-cube text-4xl text-white"></i>
             <div>
                 <div class="text-lg font-semibold">Existencia Actual</div>
-                <div class="text-3xl font-bold">{{ $totalUnits }}</div>
+                <div class="text-3xl font-bold"> 1 </div>
             </div>
         </div>
 
@@ -31,7 +31,7 @@
             <i class="fas fa-box-open text-4xl text-white"></i>
             <div>
                 <div class="text-lg font-semibold">Existencia Vendida</div>
-                <div class="text-3xl font-bold">{{ $totalSoldProducts }}</div>
+                <div class="text-3xl font-bold"> 1 </div>
             </div>
         </div>
 
@@ -40,7 +40,7 @@
             <i class="fas fa-boxes text-4xl text-gray-800"></i>
             <div>
                 <div class="text-lg font-semibold">Productos</div>
-                <div class="text-3xl font-bold">{{ $totalProducts }}</div>
+                <div class="text-3xl font-bold"> 1 </div>
             </div>
         </div>
 
@@ -49,7 +49,7 @@
             <i class="fas fa-tags text-4xl text-white"></i>
             <div>
                 <div class="text-lg font-semibold">Categorías</div>
-                <div class="text-3xl font-bold">{{ $totalCategories }}</div>
+                <div class="text-3xl font-bold"> 1 </div>
             </div>
         </div>
 
@@ -61,7 +61,7 @@
             <i class="fas fa-chart-line text-4xl text-white"></i>
             <div>
                 <div class="text-lg font-semibold">Ventas del mes</div>
-                <div class="text-3xl font-bold">{{ $totalSales }}</div>
+                <div class="text-3xl font-bold"> 1 </div>
             </div>
         </div>
 
@@ -70,7 +70,7 @@
             <i class="fas fa-cash-register text-4xl text-white"></i>
             <div>
                 <div class="text-lg font-semibold">Importe Vendido</div>
-                <div class="text-3xl font-bold">{{ $totalAmount }}</div>
+                <div class="text-3xl font-bold"> 1 </div>
             </div>
         </div>
 
@@ -79,7 +79,7 @@
             <i class="fas fa-dollar-sign text-4xl text-white"></i>
             <div>
                 <div class="text-lg font-semibold">Beneficio Bruto</div>
-                <div class="text-3xl font-bold">{{ $grossProfit }}</div>
+                <div class="text-3xl font-bold"> 1 </div>
             </div>
         </div>
 
@@ -88,7 +88,7 @@
             <i class="fas fa-file-invoice-dollar text-4xl text-white"></i>
             <div>
                 <div class="text-lg font-semibold">Facturas</div>
-                <div class="text-3xl font-bold">{{ $totalInvoices }}</div>
+                <div class="text-3xl font-bold"> 1 </div>
             </div>
         </div>
 
@@ -100,7 +100,7 @@
             <i class="fas fa-users text-4xl text-white"></i>
             <div>
                 <div class="text-lg font-semibold">Clientes</div>
-                <div class="text-3xl font-bold">{{ $totalCustomers }}</div>
+                <div class="text-3xl font-bold"> 1 </div>
             </div>
         </div>
 
@@ -109,7 +109,7 @@
             <i class="fas fa-truck text-4xl text-white"></i>
             <div>
                 <div class="text-lg font-semibold truncate">Proveedores</div>
-                <div class="text-3xl font-bold">{{ $totalVendors }}</div>
+                <div class="text-3xl font-bold"> 1 </div>
             </div>
         </div>
 
@@ -118,7 +118,7 @@
             <i class="fas fa-user text-4xl text-white"></i>
             <div>
                 <div class="text-lg font-semibold">Usuarios</div>
-                <div class="text-3xl font-bold">{{ $totalUsers }}</div>
+                <div class="text-3xl font-bold"> 1 </div>
             </div>
         </div>
     </div>
@@ -138,15 +138,6 @@
                 <div id="loading" class="text-center py-2 text-gray-500">
                     <button class="px-4 py-2 bg-red-500 text-white rounded" disabled>Cargando...</button>
                 </div>
-
-                @foreach ($criticalStockProducts as $product)
-                    <div class="border border-yellow-200 bg-yellow-50 px-4 py-2 rounded hidden fade-in">
-                        <div class="flex justify-between font-medium text-sm text-yellow-700">
-                            <span>{{ $product->product_name }}</span>
-                            <span>{{ $product->current_stock }} / {{ $product->minimum_stock }}</span>
-                        </div>
-                    </div>
-                @endforeach
             </div>
         </div>
     </div>

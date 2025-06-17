@@ -10,58 +10,58 @@ $groups = [
         [
             'name' => 'Usuarios',
             'icon' => 'user',
-            'url' => route('users.index'),
-            'current' => request()->routeIs('users.*'),
+            'url' => route('usuarios.index'),
+            'current' => request()->routeIs('usuarios.*'),
         ],
     ],
     'Gestión de Productos' => [
         [
             'name' => 'Categorías',
             'icon' => 'funnel',
-            'url' => route('categories.index'),
-            'current' => request()->routeIs('categories.*'),
+            'url' => route('categorias.index'),
+            'current' => request()->routeIs('categorias.*'),
         ],
         [
             'name' => 'Productos',
             'icon' => 'gift',
-            'url' => route('products.index'),
-            'current' => request()->routeIs('products.*'),
+            'url' => route('productos.index'),
+            'current' => request()->routeIs('productos.*'),
         ],
         [
             'name' => 'Proveedores',
             'icon' => 'truck',
-            'url' => route('vendors.index'),
-            'current' => request()->routeIs('vendors.*'),
+            'url' => route('proveedores.index'),
+            'current' => request()->routeIs('proveedores.*'),
         ],
     ],
     'Gestión de Clientes' => [
         [
             'name' => 'Clientes',
             'icon' => 'users',
-            'url' => route('customers.index'),
-            'current' => request()->routeIs('customers.*'),
+            'url' => route('clientes.index'),
+            'current' => request()->routeIs('clientes.*'),
         ],
     ],
     'Gestión de Existencias' => [
         [
-            'name' => 'Entradas',
+            'name' => 'Entradas / Compras',
             'icon' => 'arrow-down',
-            'url' => route('entries.index'),
-            'current' => request()->routeIs('entries.*'),
+            'url' => route('compras.index'),
+            'current' => request()->routeIs('compras.*'),
         ],
         [
             'name' => 'Salidas / Facturación',
             'icon' => 'arrow-up',
-            'url' => route('invoices.index'),
-            'current' => request()->routeIs('invoices.*'),
+            'url' => route('ventas.index'),
+            'current' => request()->routeIs('ventas.*'),
         ],
     ],
     'Gestión de Reportes' => [
         [
             'name' => 'Reportes',
             'icon' => 'folder',
-            'url' => route('reports.index'),
-            'current' => request()->routeIs('reports.*'),
+            'url' => route('reportes.index'),
+            'current' => request()->routeIs('reportes.*'),
         ],
     ],
 ];
@@ -74,7 +74,6 @@ $groups = [
     <style>
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -294,7 +293,7 @@ $groups = [
         <div class="sidebar-settings">
             <div class="custom-dropdown">
                 <button class="custom-dropdown-button" onclick="toggleDropdown()">
-                    <span class="user-initial">{{ strtoupper(auth()->user()->name[0]) }}</span>
+                    <span class="user-initial">{{ strtoupper(auth()->user()->nombre[0]) }}</span>
                     <span>{{ auth()->user()->name }}</span>
                 </button>
                 <div class="custom-dropdown-menu" id="userDropdown">

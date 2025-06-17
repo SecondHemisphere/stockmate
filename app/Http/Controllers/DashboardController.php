@@ -11,71 +11,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Unidades en inventario
-        DB::select('CALL get_total_units(@total)');
-        $totalUnits = DB::select('SELECT @total AS total')[0]->total;
-
-        // Total de categorías
-        DB::select('CALL get_total_categories(@total)');
-        $totalCategories = DB::select('SELECT @total AS total')[0]->total;
-
-        // Total de productos
-        DB::select('CALL get_total_products(@total)');
-        $totalProducts = DB::select('SELECT @total AS total')[0]->total;
-
-        // Total de proveedores
-        DB::select('CALL get_total_vendors(@total)');
-        $totalVendors = DB::select('SELECT @total AS total')[0]->total;
-
-        // Total de clientes
-        DB::select('CALL get_total_customers(@total)');
-        $totalCustomers = DB::select('SELECT @total AS total')[0]->total;
-
-        // Total de usuarios
-        DB::select('CALL get_total_users(@total)');
-        $totalUsers = DB::select('SELECT @total AS total')[0]->total; 
-        
-        // Total de productos críticos
-        DB::select('CALL get_total_critical_stock(@total)');
-        $totalCriticalStock  = DB::select('SELECT @total AS total')[0]->total; 
-
-        $criticalStockProducts = DB::select('CALL get_critical_stock_products()');
-
-        $totalSales= 0;
-      
-        // Facturas
-        DB::select('CALL get_total_invoices(@total)');
-        $totalInvoices = DB::select('SELECT @total AS total')[0]->total;
-
-        //Importe Vendido
-        DB::select('CALL get_total_sales_amount(@totalAmount)');
-        $totalAmount = DB::select('SELECT @totalAmount AS totalAmount')[0]->totalAmount;
-
-        //Existencias Vendidas
-        DB::select('CALL get_total_sold_products(@total)');
-        $totalSoldProducts = DB::select('SELECT @total AS total')[0]->total;
-
-        //Beneficio Bruto
-        DB::select('CALL get_gross_profit(@grossProfit)');
-        $grossProfit = DB::select('SELECT @grossProfit AS grossProfit')[0]->grossProfit;
-
-        Product::calcularStockDeTodosLosProductos();
-
-        return view('dashboard', compact(
-            'totalCategories', 
-            'totalProducts', 
-            'totalVendors',
-            'totalCustomers',
-            'totalInvoices',
-            'totalSoldProducts',
-            'totalUsers',
-            'totalSales',
-            'totalAmount',
-            'totalUnits',
-            'totalCriticalStock',
-            'criticalStockProducts',
-            'grossProfit',
-        ));
+        return view('dashboard');
     }
     
     public function getCriticalStockProducts(Request $request)
