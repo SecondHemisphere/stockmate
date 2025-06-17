@@ -19,7 +19,7 @@
             ['campo' => 'cliente_nombre', 'titulo' => 'Cliente'],
             ['campo' => 'monto_total', 'titulo' => 'Monto Total'],
             ['campo' => 'fecha', 'titulo' => 'Fecha', 'tipo' => 'fecha'],
-            ['campo' => 'metodo_pago', 'titulo' => 'Método Pago', 'tipo' => 'estado'],
+            ['campo' => 'metodo_pago', 'titulo' => 'Método Pago'],
         ];
     @endphp
 

@@ -176,22 +176,33 @@
             @enderror
         </div>
 
-        <!-- Estado de pago -->
+        <!-- Método de pago -->
         <div>
-            <label for="estado_pago" class="block mb-2 font-semibold text-gray-800">Estado de Pago</label>
-            <select name="estado_pago" id="estado_pago" required
+            <label for="metodo_pago" class="block mb-2 font-semibold text-gray-800">Método de Pago</label>
+            <select name="metodo_pago" id="metodo_pago" required
                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition">
                 @php
-                    $estados = ['PENDIENTE', 'PAGADO', 'CANCELADO', 'REEMBOLSADO'];
+                    $metodos = ['EFECTIVO', 'TARJETA_CREDITO', 'TARJETA_DEBITO', 'TRANSFERENCIA', 'OTRO'];
                 @endphp
-                @foreach ($estados as $estado)
-                    <option value="{{ $estado }}"
-                        {{ old('estado_pago', $venta->estado_pago ?? '') === $estado ? 'selected' : '' }}>
-                        {{ ucfirst(strtolower($estado)) }}
+                @foreach ($metodos as $metodo)
+                    <option value="{{ $metodo }}"
+                        {{ old('metodo_pago', $venta->metodo_pago ?? '') === $metodo ? 'selected' : '' }}>
+                        {{ ucwords(strtolower(str_replace('_', ' ', $metodo))) }}
                     </option>
                 @endforeach
             </select>
-            @error('estado_pago')
+            @error('metodo_pago')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <!-- Observaciones -->
+        <div>
+            <label for="observaciones" class="block mb-2 font-semibold text-gray-800">Observaciones</label>
+            <textarea name="observaciones" id="observaciones" rows="4"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition"
+                placeholder="Comentarios adicionales...">{{ old('observaciones', $venta->observaciones ?? '') }}</textarea>
+            @error('observaciones')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
             @enderror
         </div>
