@@ -27,13 +27,16 @@
             </div>
 
             <!-- Categoría -->
+            @php
+                $categoriaId = old('categoria_id', optional($producto)->categoria_id);
+            @endphp
             <div class="flex-1 min-w-[220px]">
                 <label for="categoria_id" class="block mb-2 text-sm font-medium text-gray-700">Categoría</label>
                 <select id="categoria-select" name="categoria_id"
                     class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                    @if (old('categoria_id', $producto->categoria_id ?? false))
-                        <option value="{{ old('categoria_id', $producto->categoria_id) }}" selected>
-                            {{ \App\Models\Categoria::find(old('categoria_id', $producto->categoria_id))->nombre ?? 'Seleccionada' }}
+                    @if ($categoriaId)
+                        <option value="{{ $categoriaId }}" selected>
+                            {{ \App\Models\Categoria::find($categoriaId)->nombre ?? 'Seleccionada' }}
                         </option>
                     @endif
                 </select>
@@ -43,13 +46,16 @@
             </div>
 
             <!-- Proveedor -->
+            @php
+                $proveedorId = old('proveedor_id', optional($producto)->proveedor_id);
+            @endphp
             <div class="flex-1 min-w-[220px]">
                 <label for="proveedor_id" class="block mb-2 text-sm font-medium text-gray-700">Proveedor</label>
                 <select id="proveedor-select" name="proveedor_id"
                     class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                    @if (old('proveedor_id', $producto->proveedor_id ?? false))
-                        <option value="{{ old('proveedor_id', $producto->proveedor_id) }}" selected>
-                            {{ \App\Models\Proveedor::find(old('proveedor_id', $producto->proveedor_id))->nombre ?? 'Seleccionado' }}
+                    @if ($proveedorId)
+                        <option value="{{ $proveedorId }}" selected>
+                            {{ \App\Models\Proveedor::find($proveedorId)->nombre ?? 'Seleccionado' }}
                         </option>
                     @endif
                 </select>
@@ -151,6 +157,66 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        new TomSelect('#categoria-select', {
+            valueField: 'id',
+            labelField: 'text',
+            searchField: 'text',
+            load: function(query, callback) {
+                if (!query.length) return callback();
+
+                fetch("{{ route('categorias.search') }}?q=" + encodeURIComponent(query))
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.items) {
+                            callback(data.items);
+                        } else {
+                            callback();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading categories:', error);
+                        callback();
+                    });
+            },
+            placeholder: 'Buscar categoría...',
+            allowEmptyOption: true,
+            maxOptions: 10
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        new TomSelect('#proveedor-select', {
+            valueField: 'id',
+            labelField: 'text',
+            searchField: 'text',
+            load: function(query, callback) {
+                if (!query.length) return callback();
+
+                fetch("{{ route('proveedores.search') }}?q=" + encodeURIComponent(query))
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.items) {
+                            callback(data.items);
+                        } else {
+                            callback();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading vendors:', error);
+                        callback();
+                    });
+            },
+            placeholder: 'Buscar proveedor...',
+            allowEmptyOption: true,
+            maxOptions: 10
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
         const compraInput = document.getElementById('precio_compra');
         const ventaInput = document.getElementById('precio_venta');
         const margenInput = document.getElementById('margen');
@@ -179,47 +245,14 @@
 
         calcularPrecioVenta();
 
-        // TomSelect init
-        new TomSelect('#categoria-select', {
-            valueField: 'id',
-            labelField: 'nombre',
-            searchField: ['nombre'],
-            load: function(query, callback) {
-                if (!query.length) return callback();
-                fetch("{{ route('categorias.search') }}?q=" + encodeURIComponent(query))
-                    .then(response => response.json())
-                    .then(data => callback(data.items || []))
-                    .catch(() => callback());
-            },
-            placeholder: 'Buscar categoría...',
-            allowEmptyOption: true,
-            maxOptions: 10,
-        });
-
-        new TomSelect('#proveedor-select', {
-            valueField: 'id',
-            labelField: 'nombre',
-            searchField: ['nombre'],
-            load: function(query, callback) {
-                if (!query.length) return callback();
-                fetch("{{ route('proveedores.search') }}?q=" + encodeURIComponent(query))
-                    .then(response => response.json())
-                    .then(data => callback(data.items || []))
-                    .catch(() => callback());
-            },
-            placeholder: 'Buscar proveedor...',
-            allowEmptyOption: true,
-            maxOptions: 10,
-        });
-    });
-
-    function previewImage(event, targetId) {
-        const input = event.target;
-        const preview = document.querySelector(targetId);
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = e => preview.src = e.target.result;
-            reader.readAsDataURL(input.files[0]);
+        function previewImage(event, targetId) {
+            const input = event.target;
+            const preview = document.querySelector(targetId);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => preview.src = e.target.result;
+                reader.readAsDataURL(input.files[0]);
+            }
         }
-    }
+    });
 </script>

@@ -112,14 +112,16 @@ class CategoriaController extends Controller
      */
     public function search(Request $request)
     {
-        $buscar = $request->input('q', '');
+        $buscar= $request->input('q');
 
-        $resultados = Categoria::where('nombre', 'like', "%{$buscar}%")
-            ->orderBy('nombre')
+        $categorias = Categoria::query()
+            ->whereLike('nombre', "%{$buscar}%")
             ->select('id', 'nombre as text')
             ->limit(10)
             ->get();
 
-        return response()->json(['items' => $resultados]);
+        return response()->json([
+            'items' => $categorias
+        ]);
     }
 }

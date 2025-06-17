@@ -42,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
     ]);
     Route::resource('clientes', ClienteController::class)->names('clientes');
     Route::resource('usuarios', UsuarioController::class)->names('usuarios');
+    
     Route::resource('ventas', VentaController::class)->names('ventas');
     Route::resource('compras', CompraController::class)->names('compras');
     Route::resource('pagos', PagoController::class)->names('pagos');
