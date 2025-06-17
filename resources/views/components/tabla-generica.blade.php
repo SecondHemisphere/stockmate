@@ -1,4 +1,6 @@
 {{-- resources/views/components/tabla-generica.blade.php --}}
+@props(['columnas', 'filas', 'rutaBase', 'mostrarEditar' => true])
+
 <table class="table-auto w-full border-collapse border border-gray-300">
     <thead>
         <tr>
@@ -55,10 +57,12 @@
                 @endforeach
 
                 <td class="border border-gray-300 px-4 py-2 text-center space-x-2">
-                    <a href="{{ url($rutaBase . '/' . $fila->id . '/edit') }}"
-                        class="inline-block bg-teal-500 text-white px-3 py-1 rounded hover:bg-teal-600 transition">
-                        Editar
-                    </a>
+                    @if ($mostrarEditar)
+                        <a href="{{ url($rutaBase . '/' . $fila->id . '/edit') }}"
+                            class="inline-block bg-teal-500 text-white px-3 py-1 rounded hover:bg-teal-600 transition">
+                            Editar
+                        </a>
+                    @endif
 
                     <form id="delete-form" action="{{ url($rutaBase . '/' . $fila->id) }}" method="POST"
                         style="display:inline-block;" class="delete-form">
