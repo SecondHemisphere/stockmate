@@ -1,3 +1,7 @@
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
+
 <x-layouts.app>
     <div class="mb-4 flex justify-between items-center">
         <flux:breadcrumbs>
@@ -33,10 +37,19 @@
             <div x-data="{ open: false, imageUrl: '', showDetails: false }"
                 class="rounded-lg overflow-hidden shadow-md bg-white hover:shadow-xl transition-shadow border border-[#faefbddc]">
                 <!-- Imagen -->
-                <div @click="imageUrl = '{{ $producto->ruta_imagen ? Storage::url($producto->ruta_imagen) : asset('images/no_image.png') }}'; open = true"
+                <div @click="imageUrl = '
+                    {{ is_array($producto['ruta_imagen'])
+                        ? Storage::url($producto['ruta_imagen'][0])
+                        : Storage::url($producto['ruta_imagen']) }}'; open = true"
                     class="cursor-pointer w-full h-40 bg-white flex items-center justify-center overflow-hidden rounded-t-lg">
-                    <img src="{{ $producto->ruta_imagen ? Storage::url($producto->ruta_imagen) : asset('images/no_image.png') }}"
-                        class="h-full w-full object-contain">
+                    @if ($producto['ruta_imagen'] ?? false)
+                        <img src="{{ is_array($producto['ruta_imagen'])
+                            ? Storage::url($producto['ruta_imagen'][0])
+                            : Storage::url($producto['ruta_imagen']) }}"
+                            class="h-full w-full object-contain">
+                    @else
+                        <img src="{{ asset('images/no_image.png') }}" class="h-full w-full object-contain">
+                    @endif
                 </div>
 
                 <!-- Info del producto -->

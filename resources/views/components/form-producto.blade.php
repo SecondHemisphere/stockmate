@@ -133,13 +133,13 @@
                         src="{{ old('ruta_imagen') ? asset('storage/' . old('ruta_imagen')) : ($producto && $producto->ruta_imagen ? asset('storage/' . $producto->ruta_imagen) : asset('images/no_image.png')) }}"
                         alt="Imagen del producto">
                 </div>
-                <label for="ruta_imagen"
+                <label for="imagen"
                     class="cursor-pointer block mt-3 text-center text-sm font-semibold text-white bg-blue-600 rounded-md px-4 py-2 hover:bg-blue-700 transition">
                     Cambiar Imagen
                 </label>
-                <input type="file" name="ruta_imagen" id="ruta_imagen" accept="image/*" class="hidden"
+                <input type="file" name="imagen" id="imagen" accept="image/*" class="hidden"
                     onchange="previewImage(event, '#imgPreview')">
-                @error('ruta_imagen')
+                @error('imagen')
                     <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                 @enderror
             </div>

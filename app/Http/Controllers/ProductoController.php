@@ -6,6 +6,8 @@ use App\Models\Producto;
 use App\Models\Categoria;
 use App\Models\Proveedor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class ProductoController extends Controller
 {
@@ -39,11 +41,14 @@ class ProductoController extends Controller
             'descripcion' => 'required|string',
             'precio_compra' => 'required|numeric|min:0',
             'precio_venta' => 'required|numeric|min:0',
-            'stock_actual' => 'required|integer|min:0',
             'stock_minimo' => 'required|integer|min:0',
-            'ruta_imagen' => 'nullable|string|max:255',
-            'estado' => 'required|in:ACTIVO,INACTIVO',
+            'imagen' => 'nullable|image|max:2048',
         ]);
+
+        if ($request->hasFile('imagen')) {
+            $rutaImagen = $request->file('imagen')->store('productos', 'public');
+            $datosValidados['ruta_imagen'] = $rutaImagen;
+        }
 
         Producto::create($datosValidados);
 
@@ -75,9 +80,18 @@ class ProductoController extends Controller
             'precio_venta' => 'required|numeric|min:0',
             'stock_actual' => 'required|integer|min:0',
             'stock_minimo' => 'required|integer|min:0',
-            'ruta_imagen' => 'nullable|string|max:255',
+            'imagen' => 'nullable|image|max:2048',
             'estado' => 'required|in:ACTIVO,INACTIVO',
         ]);
+
+        if ($request->hasFile('imagen')) {
+
+            if ($producto->ru) {
+                Storage::delete($producto->ruta_imagen);
+            }
+
+            $data['ruta_imagen'] = Storage::put('productos', $request->imagen);
+        }
 
         $producto->update($datosValidados);
 
