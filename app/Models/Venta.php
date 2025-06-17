@@ -17,10 +17,11 @@ class Venta extends Model
         'usuario_id',
         'numero_factura',
         'monto_total',
-        'fecha',
         'monto_descuento',
         'total_con_iva',
-        'estado_pago',
+        'fecha',
+        'metodo_pago',
+        'observaciones',
     ];
 
     protected $casts = [
@@ -28,6 +29,8 @@ class Venta extends Model
         'monto_descuento' => 'decimal:2',
         'total_con_iva' => 'decimal:2',
         'fecha' => 'datetime',
+        'metodo_pago' => 'string',
+        'observaciones' => 'string',
     ];
 
     // Relación con Cliente
@@ -48,8 +51,23 @@ class Venta extends Model
         return $this->hasMany(DetalleVenta::class, 'venta_id');
     }
 
+    // Accesor para obtener el nombre del cliente fácilmente
     public function getClienteNombreAttribute()
     {
         return $this->cliente ? $this->cliente->nombre : 'Sin cliente';
+    }
+
+    // Accesor para obtener el nombre del método de pago en formato legible (opcional)
+    public function getMetodoPagoNombreAttribute()
+    {
+        $metodos = [
+            'EFECTIVO' => 'Efectivo',
+            'TARJETA_CREDITO' => 'Tarjeta de Crédito',
+            'TARJETA_DEBITO' => 'Tarjeta de Débito',
+            'TRANSFERENCIA' => 'Transferencia',
+            'OTRO' => 'Otro',
+        ];
+
+        return $metodos[$this->metodo_pago] ?? 'Desconocido';
     }
 }

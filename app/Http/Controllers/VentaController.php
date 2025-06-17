@@ -7,7 +7,6 @@ use App\Models\Cliente;
 use App\Models\Producto;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\DB;
 
 class VentaController extends Controller
@@ -60,7 +59,8 @@ class VentaController extends Controller
             'monto_total' => 'required|numeric|min:0',
             'monto_descuento' => 'nullable|numeric|min:0',
             'total_con_iva' => 'required|numeric|min:0',
-            'estado_pago' => 'required|in:PENDIENTE,PAGADO,CANCELADO,REEMBOLSADO',
+            'metodo_pago' => 'required|in:EFECTIVO,TARJETA_CREDITO,TARJETA_DEBITO,TRANSFERENCIA,OTRO',
+            'observaciones' => 'nullable|string',
 
             // Validar detalles
             'detalles' => 'required|array|min:1',
@@ -81,7 +81,8 @@ class VentaController extends Controller
                 'monto_total' => $request->monto_total,
                 'monto_descuento' => $request->monto_descuento ?? 0,
                 'total_con_iva' => $request->total_con_iva,
-                'estado_pago' => $request->estado_pago,
+                'metodo_pago' => $request->metodo_pago,
+                'observaciones' => $request->observaciones,
             ]);
 
             // Guardar detalles de la venta
@@ -116,29 +117,6 @@ class VentaController extends Controller
     {
         $venta->load(['cliente', 'usuario', 'detalles.producto']);
         return view('ventas.show', compact('venta'));
-    }
-
-    /**
-     * Mostrar formulario para editar una venta (opcional, usualmente no se edita).
-     */
-    public function edit(Venta $venta)
-    {
-        // Según reglas de negocio, puede o no estar permitido editar ventas
-        $clientes = Cliente::orderBy('nombre')->get();
-        $productos = Producto::orderBy('nombre')->get();
-        $usuarios = Usuario::orderBy('nombre')->get();
-        $venta->load('detalles');
-
-        return view('ventas.edit', compact('venta', 'clientes', 'productos', 'usuarios'));
-    }
-
-    /**
-     * Actualizar una venta y sus detalles (si está permitido).
-     */
-    public function update(Request $request, Venta $venta)
-    {
-        // Similar validación que en store, adaptar según reglas
-        // Para simplicidad se puede eliminar si no permites editar ventas
     }
 
     /**

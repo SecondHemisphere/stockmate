@@ -19,7 +19,7 @@ class ProductoController extends Controller
             $query->where('nombre', 'like', "%{$search}%");
         }
 
-        $productos = $query->orderBy('nombre')->paginate(10)->withQueryString();
+        $productos = $query->orderBy('nombre')->paginate(12)->withQueryString();
 
         return view('productos.index', compact('productos'));
     }
