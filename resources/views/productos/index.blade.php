@@ -19,7 +19,8 @@
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-3">
                     <input type="text" name="search" placeholder="Buscar por nombre..."
-                        value="{{ request()->get('search') }}">
+                        value="{{ request()->get('search') }}"
+                        class="border rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-cyan-400">
                     <button type="submit" class="btn btn-neutral text-s px-4 py-2 rounded-lg">
                         Buscar
                     </button>
@@ -34,13 +35,14 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
         @foreach ($productos as $producto)
-            <div x-data="{ open: false, imageUrl: '', showDetails: false }"
+            <div x-data="{ showDetails: false }"
                 class="rounded-lg overflow-hidden shadow-md bg-white hover:shadow-xl transition-shadow border border-[#faefbddc]">
                 <!-- Imagen -->
-                <div @click="imageUrl = '
-                    {{ is_array($producto['ruta_imagen'])
-                        ? Storage::url($producto['ruta_imagen'][0])
-                        : Storage::url($producto['ruta_imagen']) }}'; open = true"
+                <div @click="$dispatch('open-image-modal', {
+                        imageUrl: '{{ is_array($producto['ruta_imagen'])
+                            ? Storage::url($producto['ruta_imagen'][0])
+                            : Storage::url($producto['ruta_imagen']) }}'
+                    })"
                     class="cursor-pointer w-full h-40 bg-white flex items-center justify-center overflow-hidden rounded-t-lg">
                     @if ($producto['ruta_imagen'] ?? false)
                         <img src="{{ is_array($producto['ruta_imagen'])
@@ -55,6 +57,12 @@
                 <!-- Info del producto -->
                 <div class="p-4 text-black">
                     <h3 class="text-lg font-semibold mb-1 break-words">{{ $producto->nombre }}</h3>
+                    <span
+                        class="inline-block text-xs font-semibold px-2 py-1 rounded-full
+                        {{ $producto->estado === 'ACTIVO' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                        {{ $producto->estado }}
+                    </span>
+
                     <p class="text-sm text-cyan-600 font-medium">
                         Categoría: {{ $producto->categoria->nombre ?? 'Sin categoría' }}
                     </p>
@@ -97,30 +105,47 @@
                     class="text-sm text-gray-800 bg-gray-50 p-2 rounded-md border border-gray-100 mx-4 mb-4">
                     {{ $producto->descripcion ?? 'Sin descripción disponible.' }}
                 </div>
-
-                <!-- Modal de imagen -->
-                <div x-show="open" x-cloak @click.away="open = false"
-                    class="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
-                    <div class="relative">
-                        <button @click="open = false"
-                            class="absolute top-2 right-2 text-white text-3xl font-bold z-50 bg-black/50 rounded-full px-2 hover:bg-black">
-                            &times;
-                        </button>
-
-                        <img :src="imageUrl" class="max-w-full max-h-[90vh] rounded-lg z-10 relative">
-                    </div>
-                </div>
             </div>
         @endforeach
     </div>
 
-    @if (!request()->has('search'))
-        <div class="mt-4">
-            {{ $productos->links() }}
-        </div>
-    @endif
+    <div @click="
+        imageUrl = '{{ is_array($producto['ruta_imagen']) && count($producto['ruta_imagen']) > 0
+            ? Storage::url($producto['ruta_imagen'][0])
+            : ($producto['ruta_imagen']
+                ? Storage::url($producto['ruta_imagen'])
+                : asset('images/no_image.png')) }}';
+        open = true
+    "
+        class="cursor-pointer w-full h-40 bg-white flex items-center justify-center overflow-hidden rounded-t-lg">
 
-    @push('js')
-        <script src="{{ mix('js/deleteConfirmation.js') }}"></script>
-    @endpush
+        <!-- Modal global para mostrar imagen -->
+        <div x-data="{ open: false, imageUrl: '' }" x-on:open-image-modal.window="imageUrl = $event.detail.imageUrl; open = true"
+            x-show="open" x-transition.opacity.duration.100ms style="display: none"
+            class="fixed inset-0 z-50 flex items-center justify-center" aria-modal="true" role="dialog">
+
+            <div @click="open = false" class="absolute inset-0 cursor-pointer backdrop-blur-sm" aria-hidden="true">
+            </div>
+
+            <div class="relative max-w-3xl max-h-full p-4 z-10" @keydown.window.escape="open = false" tabindex="0">
+                <button @click="open = false"
+                    class="absolute top-4 right-4 bg-black bg-opacity-50 text-white text-sm font-semibold hover:bg-opacity-75 focus:outline-none focus:ring-2 focus:ring-white rounded px-3 py-1 shadow-lg z-20"
+                    aria-label="Cerrar modal" type="button">
+                    Cerrar
+                </button>
+
+                <img :src="imageUrl" alt="Imagen del producto"
+                    class="max-w-full max-h-screen object-contain rounded" />
+            </div>
+        </div>
+
+        @if (!request()->has('search'))
+            <div class="mt-4">
+                {{ $productos->links() }}
+            </div>
+        @endif
+
+        @push('js')
+            <script src="{{ mix('js/deleteConfirmation.js') }}"></script>
+        @endpush
 </x-layouts.app>

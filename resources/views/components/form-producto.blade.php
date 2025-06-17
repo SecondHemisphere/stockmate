@@ -126,6 +126,26 @@
                 @enderror
             </div>
 
+            <!-- Estado -->
+            @if ($producto && $producto->id)
+                <div class="flex-1 min-w-[200px]">
+                    <label for="estado" class="block mb-2 font-semibold text-gray-800">Estado</label>
+                    @php
+                        $estadoSeleccionado = old('estado', $cliente->estado ?? 'ACTIVO');
+                    @endphp
+                    <select name="estado" id="estado" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        <option value="ACTIVO" {{ $estadoSeleccionado === 'ACTIVO' ? 'selected' : '' }}>Activo
+                        </option>
+                        <option value="INACTIVO" {{ $estadoSeleccionado === 'INACTIVO' ? 'selected' : '' }}>
+                            Inactivo</option>
+                    </select>
+                    @error('estado')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+            @endif
+
             <!-- Imagen -->
             <div class="relative mt-4 w-full md:w-1/4 max-w-[200px]">
                 <div class="w-full h-40 overflow-hidden rounded-md border border-gray-300 bg-gray-50">

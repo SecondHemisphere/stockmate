@@ -78,19 +78,17 @@ class ProductoController extends Controller
             'descripcion' => 'required|string',
             'precio_compra' => 'required|numeric|min:0',
             'precio_venta' => 'required|numeric|min:0',
-            'stock_actual' => 'required|integer|min:0',
             'stock_minimo' => 'required|integer|min:0',
             'imagen' => 'nullable|image|max:2048',
             'estado' => 'required|in:ACTIVO,INACTIVO',
         ]);
 
         if ($request->hasFile('imagen')) {
-
-            if ($producto->ru) {
+            if ($producto->ruta_imagen && Storage::exists($producto->ruta_imagen)) {
                 Storage::delete($producto->ruta_imagen);
             }
 
-            $data['ruta_imagen'] = Storage::put('productos', $request->imagen);
+            $datosValidados['ruta_imagen'] = $request->file('imagen')->store('productos');
         }
 
         $producto->update($datosValidados);

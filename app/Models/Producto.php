@@ -19,7 +19,6 @@ class Producto extends Model
         'descripcion',
         'precio_compra',
         'precio_venta',
-        'stock_actual',
         'stock_minimo',
         'ruta_imagen',
         'estado',
@@ -28,7 +27,6 @@ class Producto extends Model
     protected $casts = [
         'precio_compra' => 'decimal:2',
         'precio_venta' => 'decimal:2',
-        'stock_actual' => 'integer',
         'stock_minimo' => 'integer',
         'estado' => 'string',
     ];
