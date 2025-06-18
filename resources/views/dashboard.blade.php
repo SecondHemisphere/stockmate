@@ -66,6 +66,15 @@
             </div>
         </div>
 
+        <!-- Ventas Hoy -->
+        <div class="{{ $cardBase }}  bg-slate-500 text-white">
+            <i class="fas fa-shopping-bag text-4xl text-white"></i>
+            <div>
+                <div class="text-lg font-semibold"> Ventas Hoy</div>
+                <div class="text-3xl font-bold">{{ $ventasHoy }}</div>
+            </div>
+        </div>
+
         <!-- Importe Vendido Hoy -->
         <div class="{{ $cardBase }} bg-teal-600 text-white">
             <i class="fas fa-cash-register text-4xl text-white"></i>
@@ -125,12 +134,12 @@
     </div>
 
     <!-- Top Productos Vendidos -->
-    <div class="col-span-full text-xl font-bold text-gray-700">Top Productos Vendidos</div>
+    <div class="col-span-full text-xl font-bold text-gray-700 mt-8 mb-3">Top Productos Vendidos</div>
 
     @forelse ($topVendidos as $prod)
-        <div class="flex justify-between items-center p-4 bg-white rounded-lg shadow border border-gray-200">
+        <div class="flex justify-between items-center p-4 bg-white rounded-lg shadow border border-gray-200 mt-2 mb-2 mr-1">
             <div class="font-semibold text-gray-700">{{ $prod->nombre }}</div>
-            <div class="text-indigo-600 font-bold text-lg">{{ number_format($prod->total_vendido) }} ud</div>
+            <div class="text-indigo-600 font-bold text-lg">{{ number_format($prod->total_vendido) }} $</div>
         </div>
     @empty
         <div class="col-span-full text-center text-gray-500">No hay datos de productos vendidos aún.</div>
