@@ -34,7 +34,5 @@
             </div>
         </form>
 
-        {{-- Opcional: Formulario para eliminar cuenta --}}
-        <livewire:settings.delete-user-form />
     </x-settings.layout>
 </section>
