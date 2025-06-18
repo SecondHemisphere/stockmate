@@ -32,7 +32,7 @@ Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
     Route::get('settings/profile', Profile::class)->name('settings.profile');
     Route::get('settings/password', Password::class)->name('settings.password');
-    Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
+    // Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 
     // Recursos principales
     Route::resource('categorias', CategoriaController::class)->names('categorias');
@@ -45,7 +45,6 @@ Route::middleware(['auth'])->group(function () {
     
     Route::resource('ventas', VentaController::class)->names('ventas');
     Route::resource('compras', CompraController::class)->names('compras');
-    Route::resource('pagos', PagoController::class)->names('pagos');
 
     // Búsquedas para select2 o ajax
     Route::get('/api/categorias/search', [CategoriaController::class, 'search'])->name('categorias.search');
