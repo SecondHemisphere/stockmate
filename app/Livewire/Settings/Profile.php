@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Settings;
 
-use App\Models\User;
+use App\Models\Usuario;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
@@ -10,65 +10,53 @@ use Livewire\Component;
 
 class Profile extends Component
 {
-    public string $name = '';
+    public string $nombre = '';
+    public string $correo = '';
 
-    public string $email = '';
-
-    /**
-     * Mount the component.
-     */
     public function mount(): void
     {
-        $this->name = Auth::user()->name;
-        $this->email = Auth::user()->email;
+        $usuario = Auth::user();
+        $this->nombre = $usuario->nombre;
+        $this->correo = $usuario->correo;
     }
 
-    /**
-     * Update the profile information for the currently authenticated user.
-     */
     public function updateProfileInformation(): void
     {
-        $user = Auth::user();
+        $usuario = Auth::user();
 
         $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
-
-            'email' => [
+            'nombre' => ['required', 'string', 'max:255'],
+            'correo' => [
                 'required',
                 'string',
                 'lowercase',
                 'email',
                 'max:255',
-                Rule::unique(User::class)->ignore($user->id),
+                Rule::unique('usuarios', 'correo')->ignore($usuario->id),
             ],
         ]);
 
-        $user->fill($validated);
+        $usuario->nombre = $validated['nombre'];
+        $usuario->correo = $validated['correo'];
 
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
+        $usuario->save();
 
-        $user->save();
+        $this->dispatch('profile-updated', name: $usuario->nombre);
 
-        $this->dispatch('profile-updated', name: $user->name);
+        redirect()->route('settings.profile');
     }
 
     /**
-     * Send an email verification notification to the current user.
+     * Este método se deja como placeholder.
+     * Puedes implementar tu propio sistema de verificación si lo necesitas.
      */
     public function resendVerificationNotification(): void
     {
-        $user = Auth::user();
+        Session::flash('status', 'Funcionalidad de verificación no implementada.');
+    }
 
-        if ($user->hasVerifiedEmail()) {
-            $this->redirectIntended(default: route('dashboard', absolute: false));
-
-            return;
-        }
-
-        $user->sendEmailVerificationNotification();
-
-        Session::flash('status', 'verification-link-sent');
+    public function render()
+    {
+        return view('livewire.settings.profile');
     }
 }
