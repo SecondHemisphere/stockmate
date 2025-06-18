@@ -9,12 +9,10 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\CompraController;
-use App\Http\Controllers\PagoController;
 use App\Http\Controllers\ReporteController;
 
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\Password;
-use App\Livewire\Settings\Appearance;
 
 Route::get('/', function () {
     return redirect('/login');
@@ -42,7 +40,7 @@ Route::middleware(['auth'])->group(function () {
     ]);
     Route::resource('clientes', ClienteController::class)->names('clientes');
     Route::resource('usuarios', UsuarioController::class)->names('usuarios');
-    
+
     Route::resource('ventas', VentaController::class)->names('ventas');
     Route::resource('compras', CompraController::class)->names('compras');
 
@@ -52,16 +50,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/api/productos/search', [ProductoController::class, 'search'])->name('productos.search');
     Route::get('/api/clientes/search', [ClienteController::class, 'search'])->name('clientes.search');
 
-    // Reportes
     Route::prefix('reportes')->name('reportes.')->group(function () {
+
+        // Página principal de reportes (lista o dashboard)
         Route::get('/', [ReporteController::class, 'index'])->name('index');
-        Route::get('/stock', [ReporteController::class, 'stock'])->name('stock');
-        Route::get('/bajo-stock', [ReporteController::class, 'bajoStock'])->name('bajoStock');
-        Route::get('/movimientos', [ReporteController::class, 'movimientosInventario'])->name('movimientos');
-        Route::get('/ventas', [ReporteController::class, 'ventas'])->name('ventas');
-        Route::get('/top-productos', [ReporteController::class, 'topProductos'])->name('topProductos');
-        Route::get('/historial-producto/{id}', [ReporteController::class, 'historialProducto'])->name('historialProducto');
-        Route::get('/compras', [ReporteController::class, 'compras'])->name('compras');
+
+        // Rutas para el reporte de productos con stock crítico
+        Route::get('stock-critico', [ReporteController::class, 'productosStockCritico'])->name('stock-critico');
+
+        Route::get('stock-critico/pdf', [ReporteController::class, 'productosStockCriticoPdf'])->name('stock-critico.pdf');
+        Route::get('stock-critico/excel', [ReporteController::class, 'productosStockCriticoExcel'])->name('stock-critico.excel');
     });
 });
 
