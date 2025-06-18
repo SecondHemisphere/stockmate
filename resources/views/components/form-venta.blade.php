@@ -9,204 +9,202 @@
     'methods' => [], // Payment methods, assuming they are passed as a collection/array of objects with value and name
 ])
 
-    <div class="invoice-container">
-        <h2 class="invoice-header">{{ $titulo }}</h2>
+<div class="invoice-container">
+    <h2 class="invoice-header">{{ $titulo }}</h2>
 
-        <form action="{{ $action }}" method="POST" class="space-y-6">
-            @csrf
-            @if (in_array(strtoupper($method), ['PUT', 'PATCH', 'DELETE']))
-                @method($method)
-            @endif
+    <form action="{{ $action }}" method="POST" class="space-y-6">
+        @csrf
+        @if (in_array(strtoupper($method), ['PUT', 'PATCH', 'DELETE']))
+            @method($method)
+        @endif
 
-            <div class="invoice-section grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {{-- Cliente --}}
-                <div class="flex items-center gap-2">
-                    <label class="invoice-label min-w-[70px]" for="customer_id">Cliente:</label>
-                    <select class="flex-1 border-gray-300 rounded-md" id="customer-select" name="customer_id"
-                        placeholder="Selecciona un cliente..." required>
-                        @if (old('customer_id', $venta->cliente_id ?? ''))
-                            <option value="{{ old('customer_id', $venta->cliente_id ?? '') }}" selected>
-                                {{ \App\Models\Customer::find(old('customer_id', $venta->cliente_id ?? ''))->name ?? 'Cliente seleccionado' }}
+        <div class="invoice-section grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {{-- Cliente --}}
+            <div class="flex items-center gap-2">
+                <label class="invoice-label min-w-[70px]" for="customer_id">Cliente:</label>
+                <select class="flex-1 border-gray-300 rounded-md" id="customer-select" name="customer_id"
+                    placeholder="Selecciona un cliente..." required>
+                    @if (old('customer_id', $venta->cliente_id ?? ''))
+                        <option value="{{ old('customer_id', $venta->cliente_id ?? '') }}" selected>
+                            {{ \App\Models\Customer::find(old('customer_id', $venta->cliente_id ?? ''))->name ?? 'Cliente seleccionado' }}
+                        </option>
+                    @endif
+                </select>
+                @error('customer_id')
+                    <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            {{-- Número de Factura --}}
+            <div class="flex items-center gap-2">
+                <label class="invoice-label min-w-[70px]" for="number">N° Factura:</label>
+                <input type="text" name="number" id="number" required
+                    value="{{ old('number', $venta->numero_factura ?? $number) }}"
+                    class="w-full border-gray-300 rounded-md" placeholder="Ejemplo: F0001234"
+                    {{ $number ? 'readonly' : '' }} />
+                @error('number')
+                    <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            {{-- Fecha --}}
+            <div class="flex items-center gap-2">
+                <label class="invoice-label min-w-[70px]" for="sell_date">Fecha:</label>
+                <input type="datetime-local" name="sell_date" id="sell_date" required
+                    value="{{ old('sell_date', isset($venta->fecha) ? date('Y-m-d\TH:i', strtotime($venta->fecha)) : date('Y-m-d\TH:i')) }}"
+                    class="w-full border-gray-300 rounded-md" />
+                @error('sell_date')
+                    <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+        </div>
+
+        {{-- Productos y Cantidades --}}
+        <fieldset class="border border-gray-300 rounded-md p-4">
+            <legend class="font-semibold text-gray-800 mb-2">Productos</legend>
+
+            <table class="invoice-table">
+                <thead>
+                    <tr>
+                        <th colspan="5">Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>SubTotal</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="product-list">
+                    @php
+                        $detalleVenta = old('products', $venta ? $venta->detalles_venta->toArray() : [[]]); // Ensure at least one empty row
+                    @endphp
+
+                    @foreach ($detalleVenta as $index => $item)
+                        <tr class="product-item" data-index="{{ $index }}">
+                            <td colspan="5">
+                                <select class="product-select w-full border-gray-300 rounded-md"
+                                    name="products[{{ $index }}][product_id]" required>
+                                    @if (isset($item['product_id']))
+                                        <option value="{{ $item['product_id'] }}" selected>
+                                            {{ \App\Models\Product::find($item['product_id'])->nombre ?? 'Producto seleccionado' }}
+                                        </option>
+                                    @endif
+                                </select>
+                            </td>
+                            <td>
+                                <input type="number" name="products[{{ $index }}][sold_quantity]"
+                                    value="{{ $item['cantidad'] ?? 1 }}" min="1"
+                                    class="w-full border-gray-300 rounded-md sold-quantity" />
+                            </td>
+                            <td>
+                                <input type="text" name="products[{{ $index }}][sold_price]"
+                                    value="{{ number_format($item['precio_unitario'] ?? 0, 2) }}"
+                                    class="w-full price-input border-gray-300 rounded-md" readonly />
+                            </td>
+                            <td>
+                                <input type="text" name="products[{{ $index }}][total_sold_price]"
+                                    value="{{ number_format(($item['precio_unitario'] ?? 0) * ($item['cantidad'] ?? 0), 2) }}"
+                                    class="w-full total-sold-price border-gray-300 rounded-md" readonly />
+                            </td>
+                            <td class="text-center">
+                                <button type="button"
+                                    class="remove-product text-red-600 text-lg font-bold px-2">X</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+            <button type="button" id="add-product"
+                class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded transition">
+                + Agregar producto
+            </button>
+        </fieldset>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                {{-- Método de pago --}}
+                <div>
+                    <label for="payment_method" class="block mb-2 font-semibold text-gray-800">Método de
+                        Pago</label>
+                    <select name="payment_method" id="payment_method" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition">
+                        <option value="">Seleccionar método de pago</option>
+                        @foreach ($methods as $methodOption)
+                            <option value="{{ $methodOption->value }}"
+                                {{ old('payment_method', $venta->metodo_pago ?? '') === $methodOption->value ? 'selected' : '' }}>
+                                {{ $methodOption->name }}
                             </option>
-                        @endif
+                        @endforeach
                     </select>
-                    @error('customer_id')
-                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                    @error('payment_method')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
-                {{-- Número de Factura --}}
-                <div class="flex items-center gap-2">
-                    <label class="invoice-label min-w-[70px]" for="number">N° Factura:</label>
-                    <input type="text" name="number" id="number" required
-                        value="{{ old('number', $venta->numero_factura ?? $number) }}"
-                        class="w-full border-gray-300 rounded-md" placeholder="Ejemplo: F0001234"
-                        {{ $number ? 'readonly' : '' }} />
-                    @error('number')
-                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Fecha --}}
-                <div class="flex items-center gap-2">
-                    <label class="invoice-label min-w-[70px]" for="sell_date">Fecha:</label>
-                    <input type="datetime-local" name="sell_date" id="sell_date" required
-                        value="{{ old('sell_date', isset($venta->fecha) ? date('Y-m-d\TH:i', strtotime($venta->fecha)) : date('Y-m-d\TH:i')) }}"
-                        class="w-full border-gray-300 rounded-md" />
-                    @error('sell_date')
-                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                {{-- Observaciones / Detalles del Pago --}}
+                <div class="mt-4">
+                    <label for="details" class="block mb-2 font-semibold text-gray-800">Detalles del Pago /
+                        Observaciones</label>
+                    <textarea name="details" id="details" rows="4"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition"
+                        placeholder="Información adicional del pago o comentarios...">{{ old('details', $venta->observaciones ?? '') }}</textarea>
+                    @error('details')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
 
-            {{-- Productos y Cantidades --}}
-            <fieldset class="border border-gray-300 rounded-md p-4">
-                <legend class="font-semibold text-gray-800 mb-2">Productos</legend>
-
-                <table class="invoice-table">
-                    <thead>
+            {{-- Totales --}}
+            <div class="flex flex-col items-end justify-end">
+                <table class="invoice-table-totals w-full max-w-sm">
+                    <tbody>
                         <tr>
-                            <th colspan="5">Producto</th>
-                            <th>Cantidad</th>
-                            <th>Precio</th>
-                            <th>SubTotal</th>
-                            <th></th>
+                            <td class="text-left font-bold">Monto Total:</td>
+                            <td>
+                                <input type="number" id="total_amount" name="total_amount"
+                                    value="{{ old('total_amount', $venta->monto_total ?? 0.0) }}" min="0.00"
+                                    step="0.01" class="w-full border-gray-300 rounded-md text-right px-2 py-1"
+                                    readonly>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody id="product-list">
-                        @php
-                            $detalleVenta = old('products', $venta ? $venta->detalles_venta->toArray() : [[]]); // Ensure at least one empty row
-                        @endphp
-
-                        @foreach ($detalleVenta as $index => $item)
-                            <tr class="product-item" data-index="{{ $index }}">
-                                <td colspan="5">
-                                    <select class="product-select w-full border-gray-300 rounded-md"
-                                        name="products[{{ $index }}][product_id]" required>
-                                        @if (isset($item['product_id']))
-                                            <option value="{{ $item['product_id'] }}" selected>
-                                                {{ \App\Models\Product::find($item['product_id'])->nombre ?? 'Producto seleccionado' }}
-                                            </option>
-                                        @endif
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="number" name="products[{{ $index }}][sold_quantity]"
-                                        value="{{ $item['cantidad'] ?? 1 }}" min="1"
-                                        class="w-full border-gray-300 rounded-md sold-quantity" />
-                                </td>
-                                <td>
-                                    <input type="text" name="products[{{ $index }}][sold_price]"
-                                        value="{{ number_format($item['precio_unitario'] ?? 0, 2) }}"
-                                        class="w-full price-input border-gray-300 rounded-md" readonly />
-                                </td>
-                                <td>
-                                    <input type="text" name="products[{{ $index }}][total_sold_price]"
-                                        value="{{ number_format(($item['precio_unitario'] ?? 0) * ($item['cantidad'] ?? 0), 2) }}"
-                                        class="w-full total-sold-price border-gray-300 rounded-md" readonly />
-                                </td>
-                                <td class="text-center">
-                                    <button type="button"
-                                        class="remove-product text-red-600 text-lg font-bold px-2">X</button>
-                                </td>
-                            </tr>
-                        @endforeach
+                        <tr>
+                            <td class="text-left font-bold">Descuento:</td>
+                            <td>
+                                <input type="number" id="discount" name="discount_amount"
+                                    value="{{ old('discount_amount', $venta->monto_descuento ?? 0) }}" min="0"
+                                    step="0.01" class="w-full border-gray-300 rounded-md text-right px-2 py-1">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left font-bold">IVA (15%):</td>
+                            <td>
+                                <input type="text" id="iva_amount" name="iva_amount"
+                                    value="{{ number_format(($venta->monto_total ?? 0) * 0.15, 2) }}"
+                                    class="w-full border-gray-300 rounded-md text-right px-2 py-1" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left font-bold">Total con IVA:</td>
+                            <td>
+                                <input type="text" id="total_with_iva" name="total_with_iva"
+                                    value="{{ old('total_with_iva', $venta->total_con_iva ?? 0.0) }}" min="0.00"
+                                    step="0.01" class="w-full border-gray-300 rounded-md text-right px-2 py-1"
+                                    readonly>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
-
-                <button type="button" id="add-product"
-                    class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded transition">
-                    + Agregar producto
-                </button>
-            </fieldset>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    {{-- Método de pago --}}
-                    <div>
-                        <label for="payment_method" class="block mb-2 font-semibold text-gray-800">Método de
-                            Pago</label>
-                        <select name="payment_method" id="payment_method" required
-                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition">
-                            <option value="">Seleccionar método de pago</option>
-                            @foreach ($methods as $methodOption)
-                                <option value="{{ $methodOption->value }}"
-                                    {{ old('payment_method', $venta->metodo_pago ?? '') === $methodOption->value ? 'selected' : '' }}>
-                                    {{ $methodOption->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('payment_method')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    {{-- Observaciones / Detalles del Pago --}}
-                    <div class="mt-4">
-                        <label for="details" class="block mb-2 font-semibold text-gray-800">Detalles del Pago /
-                            Observaciones</label>
-                        <textarea name="details" id="details" rows="4"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition"
-                            placeholder="Información adicional del pago o comentarios...">{{ old('details', $venta->observaciones ?? '') }}</textarea>
-                        @error('details')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-
-                {{-- Totales --}}
-                <div class="flex flex-col items-end justify-end">
-                    <table class="invoice-table-totals w-full max-w-sm">
-                        <tbody>
-                            <tr>
-                                <td class="text-left font-bold">Monto Total:</td>
-                                <td>
-                                    <input type="number" id="total_amount" name="total_amount"
-                                        value="{{ old('total_amount', $venta->monto_total ?? 0.0) }}" min="0.00"
-                                        step="0.01" class="w-full border-gray-300 rounded-md text-right px-2 py-1"
-                                        readonly>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-left font-bold">Descuento:</td>
-                                <td>
-                                    <input type="number" id="discount" name="discount_amount"
-                                        value="{{ old('discount_amount', $venta->monto_descuento ?? 0) }}"
-                                        min="0" step="0.01"
-                                        class="w-full border-gray-300 rounded-md text-right px-2 py-1">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-left font-bold">IVA (15%):</td>
-                                <td>
-                                    <input type="text" id="iva_amount" name="iva_amount"
-                                        value="{{ number_format(($venta->monto_total ?? 0) * 0.15, 2) }}"
-                                        class="w-full border-gray-300 rounded-md text-right px-2 py-1" readonly>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-left font-bold">Total con IVA:</td>
-                                <td>
-                                    <input type="text" id="total_with_iva" name="total_with_iva"
-                                        value="{{ old('total_with_iva', $venta->total_con_iva ?? 0.0) }}"
-                                        min="0.00" step="0.01"
-                                        class="w-full border-gray-300 rounded-md text-right px-2 py-1" readonly>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
             </div>
+        </div>
 
-            {{-- Botón Guardar --}}
-            <div class="flex justify-center mt-6">
-                <button type="submit" class="px-6 py-2 bg-[#fca311] text-black rounded-md shadow font-bold text-sm">
-                    Guardar Factura y Pago
-                </button>
-            </div>
-        </form>
-    </div>
-</x-layouts.app>
+        {{-- Botón Guardar --}}
+        <div class="flex justify-center mt-6">
+            <button type="submit" class="px-6 py-2 bg-[#fca311] text-black rounded-md shadow font-bold text-sm">
+                Guardar Factura y Pago
+            </button>
+        </div>
+    </form>
+</div>
 
 @push('scripts')
     {{-- TomSelect CSS --}}
@@ -220,7 +218,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize Customer Select
-            initCustomerSelect('#customer-select', '{{ route('customers.search') }}');
+            initCustomerSelect('#customer-select', '{{ route('clientes.search') }}');
 
             // Initialize Product Selects for existing rows (if any)
             document.querySelectorAll('.product-item').forEach((row, index) => {
@@ -274,7 +272,7 @@
                 searchField: 'text',
                 load: function(query, callback) {
                     if (!query.length) return callback();
-                    fetch('{{ route('products.search2') }}?q=' + encodeURIComponent(query))
+                    fetch('{{ route('productos.search') }}?q=' + encodeURIComponent(query))
                         .then(response => response.json())
                         .then(data => callback(data.items || []))
                         .catch(() => callback());
@@ -304,7 +302,7 @@
             const oldProductId = selectElement.value;
             if (oldProductId) {
                 // Fetch the product details to get its price
-                fetch('{{ route('products.search2') }}?id=' + oldProductId)
+                fetch('{{ route('productos.search') }}?id=' + oldProductId)
                     .then(response => response.json())
                     .then(data => {
                         if (data.item) {
@@ -391,7 +389,7 @@
             let price = 0;
             if (tomSelectInstance && tomSelectInstance.items.length > 0) {
                 const selectedOption = tomSelectInstance.options[tomSelectInstance.items[
-                0]]; // Get the selected option object
+                    0]]; // Get the selected option object
                 if (selectedOption && selectedOption.sold_price !== undefined) {
                     price = parseFloat(selectedOption.sold_price);
                 }
@@ -418,7 +416,7 @@
             const totalWithIva = netTotal + iva;
 
             document.getElementById('total_amount').value = Math.max(0, netTotal).toFixed(
-            2); // Ensure total doesn't go below 0
+                2); // Ensure total doesn't go below 0
             document.getElementById('iva_amount').value = Math.max(0, iva).toFixed(2);
             document.getElementById('total_with_iva').value = Math.max(0, totalWithIva).toFixed(2);
         }
