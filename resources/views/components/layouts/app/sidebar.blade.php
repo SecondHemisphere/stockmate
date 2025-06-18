@@ -1,105 +1,192 @@
 @php
-$groups = [
-    'General' => [
-        [
-            'name' => 'Inicio',
-            'icon' => 'home',
-            'url' => route('dashboard'),
-            'current' => request()->routeIs('dashboard'),
+    $groups = [
+        'General' => [
+            [
+                'name' => 'Inicio',
+                'icon' => 'home',
+                'url' => route('dashboard'),
+                'current' => request()->routeIs('dashboard'),
+            ],
+            [
+                'name' => 'Usuarios',
+                'icon' => 'user',
+                'url' => route('usuarios.index'),
+                'current' => request()->routeIs('usuarios.*'),
+            ],
         ],
-        [
-            'name' => 'Usuarios',
-            'icon' => 'user',
-            'url' => route('usuarios.index'),
-            'current' => request()->routeIs('usuarios.*'),
+        'Gestión de Productos' => [
+            [
+                'name' => 'Categorías',
+                'icon' => 'funnel',
+                'url' => route('categorias.index'),
+                'current' => request()->routeIs('categorias.*'),
+            ],
+            [
+                'name' => 'Productos',
+                'icon' => 'gift',
+                'url' => route('productos.index'),
+                'current' => request()->routeIs('productos.*'),
+            ],
+            [
+                'name' => 'Proveedores',
+                'icon' => 'truck',
+                'url' => route('proveedores.index'),
+                'current' => request()->routeIs('proveedores.*'),
+            ],
         ],
-    ],
-    'Gestión de Productos' => [
-        [
-            'name' => 'Categorías',
-            'icon' => 'funnel',
-            'url' => route('categorias.index'),
-            'current' => request()->routeIs('categorias.*'),
+        'Gestión de Clientes' => [
+            [
+                'name' => 'Clientes',
+                'icon' => 'users',
+                'url' => route('clientes.index'),
+                'current' => request()->routeIs('clientes.*'),
+            ],
         ],
-        [
-            'name' => 'Productos',
-            'icon' => 'gift',
-            'url' => route('productos.index'),
-            'current' => request()->routeIs('productos.*'),
+        'Gestión de Existencias' => [
+            [
+                'name' => 'Entradas / Compras',
+                'icon' => 'arrow-down',
+                'url' => route('compras.index'),
+                'current' => request()->routeIs('compras.*'),
+            ],
+            [
+                'name' => 'Salidas / Facturación',
+                'icon' => 'arrow-up',
+                'url' => route('ventas.index'),
+                'current' => request()->routeIs('ventas.*'),
+            ],
         ],
-        [
-            'name' => 'Proveedores',
-            'icon' => 'truck',
-            'url' => route('proveedores.index'),
-            'current' => request()->routeIs('proveedores.*'),
+        'Gestión de Reportes' => [
+            [
+                'name' => 'Reportes',
+                'icon' => 'folder',
+                'url' => route('reportes.index'),
+                'current' => request()->routeIs('reportes.*'),
+            ],
         ],
-    ],
-    'Gestión de Clientes' => [
-        [
-            'name' => 'Clientes',
-            'icon' => 'users',
-            'url' => route('clientes.index'),
-            'current' => request()->routeIs('clientes.*'),
-        ],
-    ],
-    'Gestión de Existencias' => [
-        [
-            'name' => 'Entradas / Compras',
-            'icon' => 'arrow-down',
-            'url' => route('compras.index'),
-            'current' => request()->routeIs('compras.*'),
-        ],
-        [
-            'name' => 'Salidas / Facturación',
-            'icon' => 'arrow-up',
-            'url' => route('ventas.index'),
-            'current' => request()->routeIs('ventas.*'),
-        ],
-    ],
-    'Gestión de Reportes' => [
-        [
-            'name' => 'Reportes',
-            'icon' => 'folder',
-            'url' => route('reportes.index'),
-            'current' => request()->routeIs('reportes.*'),
-        ],
-    ],
-];
+    ];
 @endphp
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+
 <head>
     @include('partials.head')
     <style>
-        body {
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: #e0f7fa; /* Un azul muy claro, casi blanco */
-            color: #263238; 
-        }
-
-        .sidebar {
+        /* === BARRA SUPERIOR === */
+        header.topbar {
             position: fixed;
             top: 0;
             left: 0;
-            bottom: 0;
             right: 0;
-            width: 250px; 
-            background-color: #37474f; 
-            color: #cfd8dc; 
-            padding-top: 25px;
-            overflow-y: auto;
-            border-right: 1px solid #263238; 
+            height: 56px;
+            background-color: #37474f;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            z-index: 1100;
+            user-select: none;
         }
 
-        .main-content {
-            margin-left: 250px;
-            padding: 5px; 
-            background-color: #e0f7fa;
-            flex-grow: 1;
+        /* Logo en barra superior */
+        header.topbar .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        header.topbar .logo-container svg {
+            width: 32px;
+            height: 32px;
+            fill: #fff;
+        }
+
+        header.topbar .logo-container span {
+            font-weight: 700;
+            font-size: 20px;
+            color: #fff;
+        }
+
+        /* Widget cuenta dentro barra superior */
+        .account-widget {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #fff;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-initial {
+            background-color: #00838f;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            user-select: none;
+        }
+
+        .custom-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            min-width: 160px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            display: none;
+            margin-top: 6px;
+            z-index: 1200;
+        }
+
+        .custom-dropdown-menu a,
+        .custom-dropdown-menu button {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            text-align: left;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #263238;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .custom-dropdown-menu a:hover,
+        .custom-dropdown-menu button:hover {
+            background-color: #f5f5f5;
+        }
+
+        .custom-dropdown.open .custom-dropdown-menu {
+            display: block;
+        }
+
+        /* === SIDEBAR === */
+        .sidebar {
+            position: fixed;
+            top: 56px;
+            /* debajo de la barra superior */
+            left: 0;
+            bottom: 0;
+            width: 250px;
+            background-color: #37474f;
+            color: #cfd8dc;
+            padding-top: 20px;
+            overflow-y: auto;
+            border-right: 1px solid #263238;
+            z-index: 1000;
         }
 
         .sidebar .sidebar-header {
@@ -112,10 +199,12 @@ $groups = [
             display: flex;
             justify-content: space-between;
             align-items: center;
+            user-select: none;
+            cursor: pointer;
         }
 
         .sidebar .nav-item {
-            margin: 0px 0;
+            margin: 0;
         }
 
         .sidebar .nav-link {
@@ -129,103 +218,31 @@ $groups = [
             border-left: 5px solid transparent;
         }
 
-        .sidebar .nav-link-icon{
-            color: #ffffff;
-        }
-
         .sidebar .nav-link:hover {
             background-color: #263238;
-            color: #fff;
         }
 
         .sidebar .nav-link.current {
-            background-color: #00838f; 
-            color: #fff;
+            background-color: #00838f;
             font-weight: 500;
-            border-left-color: #fff;
+            border-left-color: #ffffff;
         }
 
         .sidebar .nav-link svg {
-            fill: #b0bec5; 
+            fill: #b0bec5;
             transition: fill 0.3s ease;
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
         }
 
-        .sidebar .nav-link:hover svg {
-            fill: #fff;
-        }
-
+        .sidebar .nav-link:hover svg,
         .sidebar .nav-link.current svg {
-            fill: #fff;
+            fill: #ffffff;
         }
 
-        .sidebar-settings {
-            padding: 20px;
-            border-top: 1px solid #263238;
-        }
-
-        .custom-dropdown {
-            position: relative;
-        }
-
-        .custom-dropdown-button {
-            display: flex;
-            align-items: center;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 15px;
-            padding: 8px 0;
-            color: #cfd8dc;
-        }
-
-        .user-initial {
-            background-color: #00695c; 
-            color: #fff;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .custom-dropdown-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            min-width: 180px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: none;
-            z-index: 10;
-        }
-
-        .custom-dropdown-menu a,
-        .custom-dropdown-menu button {
-            display: block;
-            width: 100%;
-            padding: 12px 15px;
-            text-align: left;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #263238;
-            font-size: 14px;
-            transition: background-color 0.2s ease;
-        }
-
-        .custom-dropdown-menu a:hover,
-        .custom-dropdown-menu button:hover {
-            background-color: #f5f5f5;
-        }
-
-        .toggle-button {
-            cursor: pointer;
-            font-size: 16px;
-            color: #b0bec5;
+        .sidebar a {
+            text-decoration: none;
         }
 
         .nav-items {
@@ -236,38 +253,43 @@ $groups = [
             display: none;
         }
 
-        .sidebar a {
-            text-decoration: none;
-        }
-
-        .sidebar .logo-container {
-            display: flex;
-            align-items: center;
-            padding: 0 20px 25px;
-        }
-
-        .sidebar .logo-container svg {
-            width: 36px;
-            height: 36px;
-            fill: #fff;
-        }
-
-        .sidebar .logo-container span {
-            margin-left: 12px;
-            font-weight: bold;
-            font-size: 18px;
-            color: #fff;
+        /* === CONTENIDO PRINCIPAL === */
+        .main-content {
+            margin-left: 250px;
+            margin-top: 35px;
+            padding: 15px 5px;
+            background-color: #e0f7fa;
+            min-height: calc(100vh - 56px);
+            flex-grow: 1;
         }
     </style>
 </head>
 
 <body>
-    <div class="sidebar">
-        <a href="{{ route('dashboard') }}" class="logo-container">
+    <!-- BARRA SUPERIOR -->
+    <header class="topbar">
+        <a href="{{ route('dashboard') }}" class="logo-container" title="StockMate">
             <x-app-logo-white />
             <span>StockMate</span>
         </a>
 
+        <div class="account-widget custom-dropdown" id="accountDropdown">
+            <div class="user-initial" onclick="toggleAccountDropdown()">
+                {{ strtoupper(auth()->user()->nombre[0]) }}
+            </div>
+            <span class="user-name" onclick="toggleAccountDropdown()">{{ auth()->user()->nombre }}</span>
+            <div class="custom-dropdown-menu" aria-label="Menú de usuario">
+                <a href="{{ route('settings.profile') }}">Configuración</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit">Cerrar sesión</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
         <nav>
             @foreach ($groups as $group => $links)
                 <div class="sidebar-group">
@@ -279,8 +301,8 @@ $groups = [
                         @foreach ($links as $link)
                             <div class="nav-item">
                                 <a href="{{ $link['url'] }}"
-                                   class="nav-link {{ $link['current'] ? 'current' : '' }}">
-                                    <x-icon name="{{ $link['icon'] }}" style="width: 18px; height: 18px; margin-right: 8px;" class="nav-link-icon" />
+                                    class="nav-link {{ $link['current'] ? 'current' : '' }}">
+                                    <x-icon name="{{ $link['icon'] }}" class="nav-link-icon" />
                                     <span>{{ $link['name'] }}</span>
                                 </a>
                             </div>
@@ -289,28 +311,14 @@ $groups = [
                 </div>
             @endforeach
         </nav>
-
-        <div class="sidebar-settings">
-            <div class="custom-dropdown">
-                <button class="custom-dropdown-button" onclick="toggleDropdown()">
-                    <span class="user-initial">{{ strtoupper(auth()->user()->nombre[0]) }}</span>
-                    <span>{{ auth()->user()->name }}</span>
-                </button>
-                <div class="custom-dropdown-menu" id="userDropdown">
-                    <a href="{{ route('settings.profile') }}">Configuración</a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit">Cerrar Sesión</button>
-                    </form>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <div class="main-content">
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
         {{ $slot }}
-    </div>
+    </main>
 
+    <!-- JS -->
     <script>
         function toggleGroup(groupSlug) {
             const group = document.querySelector(`.${groupSlug}`);
@@ -324,35 +332,33 @@ $groups = [
             }
         }
 
-        function toggleDropdown() {
-            const menu = document.getElementById('userDropdown');
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        function toggleAccountDropdown() {
+            document.getElementById('accountDropdown').classList.toggle('open');
         }
 
-        document.addEventListener('click', function (e) {
-            const dropdown = document.querySelector('.custom-dropdown');
-            const menu = document.getElementById('userDropdown');
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('accountDropdown');
             if (!dropdown.contains(e.target)) {
-                menu.style.display = 'none';
+                dropdown.classList.remove('open');
             }
         });
-        
-        document.addEventListener('DOMContentLoaded', function () {
+
+        document.addEventListener('DOMContentLoaded', function() {
             const currentLink = document.querySelector('.nav-link.current');
             if (currentLink) {
-            const navItems = currentLink.closest('.nav-items');
-            if (navItems) {
-                navItems.classList.remove('hidden-group');
+                const navItems = currentLink.closest('.nav-items');
+                if (navItems) {
+                    navItems.classList.remove('hidden-group');
 
-                const groupSlug = navItems.classList[0];
-                const toggleButton = document.getElementById(`toggle-${groupSlug}`);
-                if (toggleButton) {
-                toggleButton.textContent = '-';
+                    const groupSlug = navItems.classList[0];
+                    const toggleButton = document.getElementById(`toggle-${groupSlug}`);
+                    if (toggleButton) {
+                        toggleButton.textContent = '-';
+                    }
                 }
             }
-        }
-    });
-
+        });
     </script>
 </body>
+
 </html>
