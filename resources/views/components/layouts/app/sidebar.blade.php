@@ -73,6 +73,9 @@
 <head>
     @include('partials.head')
     <style>
+        body {
+            background-color: #e0f7fa;
+        }
         /* === BARRA SUPERIOR === */
         header.topbar {
             position: fixed;
@@ -256,10 +259,8 @@
         /* === CONTENIDO PRINCIPAL === */
         .main-content {
             margin-left: 250px;
-            margin-top: 35px;
-            padding: 15px 5px;
+            margin-top: 50px;
             background-color: #e0f7fa;
-            min-height: calc(100vh - 56px);
             flex-grow: 1;
         }
     </style>

@@ -109,43 +109,33 @@
         @endforeach
     </div>
 
-    <div @click="
-        imageUrl = '{{ is_array($producto['ruta_imagen']) && count($producto['ruta_imagen']) > 0
-            ? Storage::url($producto['ruta_imagen'][0])
-            : ($producto['ruta_imagen']
-                ? Storage::url($producto['ruta_imagen'])
-                : asset('images/no_image.png')) }}';
-        open = true
-    "
-        class="cursor-pointer w-full h-40 bg-white flex items-center justify-center overflow-hidden rounded-t-lg">
+    <x-paginacion :datos="$productos" />
 
-        <!-- Modal global para mostrar imagen -->
-        <div x-data="{ open: false, imageUrl: '' }" x-on:open-image-modal.window="imageUrl = $event.detail.imageUrl; open = true"
-            x-show="open" x-transition.opacity.duration.100ms style="display: none"
-            class="fixed inset-0 z-50 flex items-center justify-center" aria-modal="true" role="dialog">
+    <!-- Modal global fuera del flujo -->
+    <div x-data="{ open: false, imageUrl: '' }" x-on:open-image-modal.window="imageUrl = $event.detail.imageUrl; open = true"
+        x-show="open" x-transition.opacity.duration.100ms class="fixed inset-0 z-50 flex items-center justify-center"
+        x-cloak aria-modal="true" role="dialog">
 
-            <div @click="open = false" class="absolute inset-0 cursor-pointer backdrop-blur-sm" aria-hidden="true">
-            </div>
+        <!-- Fondo borroso -->
+        <div @click="open = false" class="absolute inset-0 cursor-pointer backdrop-blur-sm" aria-hidden="true"></div>
 
-            <div class="relative max-w-3xl max-h-full p-4 z-10" @keydown.window.escape="open = false" tabindex="0">
-                <button @click="open = false"
-                    class="absolute top-4 right-4 bg-black bg-opacity-50 text-white text-sm font-semibold hover:bg-opacity-75 focus:outline-none focus:ring-2 focus:ring-white rounded px-3 py-1 shadow-lg z-20"
-                    aria-label="Cerrar modal" type="button">
-                    Cerrar
-                </button>
+        <!-- Contenedor de la imagen -->
+        <div class="relative p-4 z-10 max-w-screen-lg w-full max-h-screen" @keydown.window.escape="open = false"
+            tabindex="0">
+            <!-- Botón cerrar -->
+            <button @click="open = false"
+                class="absolute top-4 right-4 bg-black bg-opacity-50 text-white text-sm font-semibold hover:bg-opacity-75 focus:outline-none focus:ring-2 focus:ring-white rounded px-3 py-1 shadow-lg z-20"
+                aria-label="Cerrar modal" type="button">
+                Cerrar
+            </button>
 
-                <img :src="imageUrl" alt="Imagen del producto"
-                    class="max-w-full max-h-screen object-contain rounded" />
-            </div>
+            <!-- Imagen -->
+            <img :src="imageUrl" alt="Imagen del producto"
+                class="mx-auto max-w-full max-h-[50vh] object-contain rounded shadow-lg" />
         </div>
+    </div>
 
-        @if (!request()->has('search'))
-            <div class="mt-4">
-                {{ $productos->links() }}
-            </div>
-        @endif
-
-        @push('js')
-            <script src="{{ mix('js/deleteConfirmation.js') }}"></script>
-        @endpush
+    @push('js')
+        <script src="{{ mix('js/deleteConfirmation.js') }}"></script>
+    @endpush
 </x-layouts.app>
