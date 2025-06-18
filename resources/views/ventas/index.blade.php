@@ -20,6 +20,7 @@
             ['campo' => 'monto_total', 'titulo' => 'Monto Total'],
             ['campo' => 'fecha', 'titulo' => 'Fecha', 'tipo' => 'fecha'],
             ['campo' => 'metodo_pago', 'titulo' => 'Método Pago'],
+            ['campo' => 'observaciones', 'titulo' => 'Observaciones'],
         ];
     @endphp
 
