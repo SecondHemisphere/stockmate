@@ -41,11 +41,11 @@
                 </a>
             </div>
 
-            <!-- Reporte de Compras por Rango de Fechas -->
+            <!-- Reporte de Compras por Rango de Fechas o Proveedores -->
             <div class="border p-6 rounded-xl shadow-lg bg-white hover:shadow-xl transition duration-300 ease-in-out">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Compras por Rango de Fechas</h3>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">Compras por Rango de Fechas o Proveedores</h3>
                 <p class="text-sm text-gray-600 mb-4">Control de compras según proveedor y fecha.</p>
-                <a href="{{ route('reportes.stock-critico') }}"
+                <a href="{{ route('reportes.compras-filtradas') }}"
                     class="btn px-6 py-3 rounded-lg bg-teal-600 text-white hover:bg-teal-800 flex items-center gap-2 transition duration-300">
                     <i class="fas fa-table text-lg"></i> Ver
                 </a>

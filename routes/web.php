@@ -74,6 +74,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('proveedores-activos', [ReporteController::class, 'proveedoresActivos'])->name('proveedores-activos');
         Route::get('proveedores-activos/pdf', [ReporteController::class, 'proveedoresActivosPdf'])->name('proveedores-activos.pdf');
         Route::get('proveedores-activos/excel', [ReporteController::class, 'proveedoresActivosExcel'])->name('proveedores-activos.excel');
+
+        Route::get('compras-filtradas', [ReporteController::class, 'comprasFiltradas'])->name('compras-filtradas');
+        Route::get('compras-filtradas/pdf', [ReporteController::class, 'comprasFiltradasPdf'])->name('compras-filtradas.pdf');
+        Route::get('compras-filtradas/excel', [ReporteController::class, 'comprasFiltradasExcel'])->name('compras-filtradas.excel');
     });
 });
 
