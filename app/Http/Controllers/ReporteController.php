@@ -258,47 +258,26 @@ class ReporteController extends Controller
     {
         $query = DB::table('vw_compras_por_fecha');
 
-        $fechaInicio = $request->fecha_inicio;
-        $fechaFin = $request->fecha_fin;
-        $proveedorId = $request->proveedor_id;
-
-        if ($fechaInicio && $fechaFin) {
-            $query->whereBetween('fecha_transaccion', [$fechaInicio, $fechaFin]);
+        if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
+            $query->whereBetween('fecha_transaccion', [$request->fecha_inicio, $request->fecha_fin]);
         }
 
-        if ($proveedorId) {
-            $query->where('proveedor_id', $proveedorId);
+        if ($request->filled('proveedor_id')) {
+            $query->where('proveedor_id', $request->proveedor_id);
         }
 
         $compras = $query->get();
 
-        $proveedorNombre = 'Todos';
-        if ($proveedorId) {
-            $proveedor = DB::table('proveedores')->find($proveedorId);
-            $proveedorNombre = $proveedor->nombre ?? 'Desconocido';
-        }
-
         $headers = [
-            'index' => 'ID',
-            'fecha_transaccion' => 'Fecha Transacción',
+            'fecha_transaccion' => 'Fecha',
             'proveedor_nombre' => 'Proveedor',
             'producto' => 'Producto',
             'cantidad' => 'Cantidad',
             'monto_total' => 'Monto Total',
         ];
 
-        $filtros = [
-            ['Filtros Aplicados:'],
-            ['Rango de Fechas:', $fechaInicio && $fechaFin
-                ? \Carbon\Carbon::parse($fechaInicio)->format('d/m/Y') . ' al ' . \Carbon\Carbon::parse($fechaFin)->format('d/m/Y')
-                : 'Todos'],
-            ['Proveedor:', $proveedorNombre],
-            [],
-        ];
-
         $data = $compras->map(function ($item, $key) {
             return [
-                'index' => $key + 1,
                 'fecha_transaccion' => \Carbon\Carbon::parse($item->fecha_transaccion)->format('d/m/Y H:i'),
                 'proveedor_nombre' => $item->proveedor_nombre,
                 'producto' => $item->producto,
@@ -307,8 +286,6 @@ class ReporteController extends Controller
             ];
         })->toArray();
 
-        $finalData = array_merge($filtros, [$headers], $data);
-
-        return (new ExcelExporter($finalData, [], 'compras.xlsx'))->export();
+        return (new ExcelExporter($data, $headers, 'compras.xlsx'))->export();
     }
 }

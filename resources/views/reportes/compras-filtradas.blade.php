@@ -14,7 +14,7 @@
         <div>
             <label for="fecha_fin" class="block text-gray-700 font-semibold mb-1">Fecha Fin</label>
             <input type="date" name="fecha_fin" id="fecha_fin" value="{{ request('fecha_fin') }}"
-                class="border border-gray-300 rounded px-3 py-2" />
+                class="border border-gray-300 rounded px-3 py-2" disabled />
         </div>
         <div>
             <label for="proveedor_id" class="block text-gray-700 font-semibold mb-1">Proveedor</label>
@@ -57,4 +57,26 @@
         'monto_total' => fn($valor) => '$' . number_format($valor, 2),
         'fecha_transaccion' => fn($valor) => \Carbon\Carbon::parse($valor)->format('d/m/Y H:i'),
     ]" />
+
+    <!-- Script para habilitar Fecha Fin -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fechaInicio = document.getElementById('fecha_inicio');
+            const fechaFin = document.getElementById('fecha_fin');
+
+            function toggleFechaFin() {
+                if (fechaInicio.value) {
+                    fechaFin.disabled = false;
+                    fechaFin.min = fechaInicio.value;
+                } else {
+                    fechaFin.disabled = true;
+                    fechaFin.value = '';
+                }
+            }
+
+            toggleFechaFin();
+
+            fechaInicio.addEventListener('input', toggleFechaFin);
+        });
+    </script>
 </x-layouts.app>
