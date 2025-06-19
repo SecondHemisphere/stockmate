@@ -288,4 +288,110 @@ class ReporteController extends Controller
 
         return (new ExcelExporter($data, $headers, 'compras.xlsx'))->export();
     }
+
+    public function ventasFiltradas(Request $request)
+    {
+        $query = DB::table('vw_ventas_por_fecha');
+
+        if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
+            $query->whereBetween('fecha', [$request->fecha_inicio, $request->fecha_fin]);
+        } elseif ($request->filled('fecha_inicio')) {
+            $query->where('fecha', '>=', $request->fecha_inicio);
+        } elseif ($request->filled('fecha_fin')) {
+            $query->where('fecha', '<=', $request->fecha_fin);
+        }
+
+        if ($request->filled('cliente_id')) {
+            $query->where('cliente_id', $request->cliente_id);
+        }
+
+        if ($request->filled('usuario_id')) {
+            $query->where('usuario_id', $request->usuario_id);
+        }
+
+        $ventas = $query->orderBy('fecha', 'desc')->get();
+
+        $clientes = DB::table('clientes')->where('estado', 'ACTIVO')->get();
+        $usuarios = DB::table('usuarios')->where('estado', 'ACTIVO')->get();
+
+        return view('reportes.ventas-filtradas', compact('ventas', 'clientes', 'usuarios'));
+    }
+
+    public function ventasFiltradasPdf(Request $request)
+    {
+        $query = DB::table('vw_ventas_por_fecha');
+
+        if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
+            $query->whereBetween('fecha', [$request->fecha_inicio, $request->fecha_fin]);
+        } elseif ($request->filled('fecha_inicio')) {
+            $query->where('fecha', '>=', $request->fecha_inicio);
+        } elseif ($request->filled('fecha_fin')) {
+            $query->where('fecha', '<=', $request->fecha_fin);
+        }
+
+        if ($request->filled('cliente_id')) {
+            $query->where('cliente_id', $request->cliente_id);
+        }
+
+        if ($request->filled('usuario_id')) {
+            $query->where('usuario_id', $request->usuario_id);
+        }
+
+        $ventas = $query->orderBy('fecha', 'desc')->get();
+
+        $pdf = Pdf::loadView('reportes.ventas-filtradas-pdf', compact('ventas'));
+
+        return $pdf->download('ventas.pdf');
+    }
+
+    public function ventasFiltradasExcel(Request $request)
+    {
+        $query = DB::table('vw_ventas_por_fecha');
+
+        if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
+            $query->whereBetween('fecha', [$request->fecha_inicio, $request->fecha_fin]);
+        } elseif ($request->filled('fecha_inicio')) {
+            $query->where('fecha', '>=', $request->fecha_inicio);
+        } elseif ($request->filled('fecha_fin')) {
+            $query->where('fecha', '<=', $request->fecha_fin);
+        }
+
+        if ($request->filled('cliente_id')) {
+            $query->where('cliente_id', $request->cliente_id);
+        }
+
+        if ($request->filled('usuario_id')) {
+            $query->where('usuario_id', $request->usuario_id);
+        }
+
+        $ventas = $query->orderBy('fecha', 'desc')->get();
+
+        $headers = [
+            'fecha' => 'Fecha',
+            'numero_factura' => 'Número Factura',
+            'cliente_nombre' => 'Cliente',
+            'usuario_nombre' => 'Usuario',
+            'monto_total' => 'Monto Total',
+            'monto_descuento' => 'Descuento',
+            'total_con_iva' => 'Total con IVA',
+            'metodo_pago' => 'Método de Pago',
+            'observaciones' => 'Observaciones',
+        ];
+
+        $data = $ventas->map(function ($item, $key) {
+            return [
+                'fecha' => \Carbon\Carbon::parse($item->fecha)->format('d/m/Y H:i'),
+                'numero_factura' => $item->numero_factura,
+                'cliente_nombre' => $item->cliente_nombre,
+                'usuario_nombre' => $item->usuario_nombre,
+                'monto_total' => number_format($item->monto_total, 2),
+                'monto_descuento' => number_format($item->monto_descuento, 2),
+                'total_con_iva' => number_format($item->total_con_iva, 2),
+                'metodo_pago' => $item->metodo_pago,
+                'observaciones' => $item->observaciones,
+            ];
+        })->toArray();
+
+        return (new ExcelExporter($data, $headers, 'ventas.xlsx'))->export();
+    }
 }

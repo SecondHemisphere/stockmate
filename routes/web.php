@@ -78,6 +78,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('compras-filtradas', [ReporteController::class, 'comprasFiltradas'])->name('compras-filtradas');
         Route::get('compras-filtradas/pdf', [ReporteController::class, 'comprasFiltradasPdf'])->name('compras-filtradas.pdf');
         Route::get('compras-filtradas/excel', [ReporteController::class, 'comprasFiltradasExcel'])->name('compras-filtradas.excel');
+
+        Route::get('ventas-filtradas', [ReporteController::class, 'ventasFiltradas'])->name('ventas-filtradas');
+        Route::get('ventas-filtradas/pdf', [ReporteController::class, 'ventasFiltradasPdf'])->name('ventas-filtradas.pdf');
+        Route::get('ventas-filtradas/excel', [ReporteController::class, 'ventasFiltradasExcel'])->name('ventas-filtradas.excel');
     });
 });
 
