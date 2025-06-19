@@ -70,6 +70,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('stock-actual', [ReporteController::class, 'stockActual'])->name('stock-actual');
         Route::get('stock-actuals/pdf', [ReporteController::class, 'stockActualPdf'])->name('stock-actual.pdf');
         Route::get('stock-actual/excel', [ReporteController::class, 'stockActualExcel'])->name('stock-actual.excel');
+
+        Route::get('proveedores-activos', [ReporteController::class, 'proveedoresActivos'])->name('proveedores-activos');
+        Route::get('proveedores-activos/pdf', [ReporteController::class, 'proveedoresActivosPdf'])->name('proveedores-activos.pdf');
+        Route::get('proveedores-activos/excel', [ReporteController::class, 'proveedoresActivosExcel'])->name('proveedores-activos.excel');
     });
 });
 

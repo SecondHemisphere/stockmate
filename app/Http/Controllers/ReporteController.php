@@ -174,4 +174,44 @@ class ReporteController extends Controller
 
         return (new ExcelExporter($data, $headers, 'stock-actual.xlsx'))->export();
     }
+
+    public function proveedoresActivos()
+    {
+        $proveedores = DB::table('vw_proveedores_activos')->get();
+        return view('reportes.proveedores-activos', compact('proveedores'));
+    }
+
+    public function proveedoresActivosPdf()
+    {
+        $proveedores = DB::table('vw_proveedores_activos')->get();
+        $pdf = Pdf::loadView('reportes.proveedores-activos-pdf', compact('proveedores'));
+        return $pdf->download('proveedores-activos.pdf');
+    }
+
+    public function proveedoresActivosExcel()
+    {
+        $proveedores = DB::table('vw_proveedores_activos')->get();
+
+        $headers = [
+            'index' => 'ID',
+            'nombre' => 'Nombre',
+            'correo' => 'Correo',
+            'telefono' => 'Teléfono',
+            'direccion' => 'Dirección',
+            'estado' => 'Estado',
+        ];
+
+        $data = $proveedores->map(function ($item, $key) {
+            return [
+                'index' => $key + 1,
+                'nombre' => $item->nombre,
+                'correo' => $item->correo,
+                'telefono' => $item->telefono,
+                'direccion' => $item->direccion,
+                'estado' => ucfirst(strtolower($item->estado)),
+            ];
+        })->toArray();
+
+        return (new ExcelExporter($data, $headers, 'proveedores-activos.xlsx'))->export();
+    }
 }
