@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\ProductosStockCriticoExport;
-use App\Http\Controllers\Controller;
+use App\Exports\ExcelExporter;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ReporteController extends Controller
 {
@@ -33,6 +33,30 @@ class ReporteController extends Controller
 
     public function productosStockCriticoExcel()
     {
-        return Excel::download(new ProductosStockCriticoExport, 'stock-critico.xlsx');
+        $productos = DB::table('vw_productos_stock_minimo')->get();
+
+        $headers = [
+            'index' => '#',
+            'nombre' => 'Producto',
+            'descripcion' => 'Descripción',
+            'stock_actual' => 'Stock Actual',
+            'stock_minimo' => 'Stock Mínimo',
+            'categoria' => 'Categoría',
+            'proveedor' => 'Proveedor',
+        ];
+
+        $data = $productos->map(function ($item, $key) {
+            return [
+                'index' => $key + 1,
+                'nombre' => $item->nombre,
+                'descripcion' => $item->descripcion,
+                'stock_actual' => $item->stock_actual,
+                'stock_minimo' => $item->stock_minimo,
+                'categoria' => $item->categoria,
+                'proveedor' => $item->proveedor,
+            ];
+        })->toArray();
+
+        return (new ExcelExporter($data, $headers, 'stock_critico.xlsx'))->export();
     }
 }

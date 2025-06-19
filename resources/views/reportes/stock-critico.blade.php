@@ -1,6 +1,6 @@
 <x-layouts.app>
     <div class="mb-6">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-2">Reporte de Productos con Stock Bajo Mínimos</h2>
+        <h2 class="text-2xl font-semibold text-gray-800 mb-2">Reporte de Productos con Stock Crítico</h2>
         <p class="text-sm text-gray-600">Visualización de productos críticos en inventario.</p>
     </div>
 
