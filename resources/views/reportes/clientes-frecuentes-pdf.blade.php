@@ -32,7 +32,7 @@
 
         .header .titulo {
             font-size: 18px;
-            color: #d32f2f;
+            color: #fabc07;
             margin-top: 5px;
         }
 

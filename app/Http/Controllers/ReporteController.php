@@ -128,4 +128,50 @@ class ReporteController extends Controller
 
         return (new ExcelExporter($data, $headers, 'clientes-frecuentes.xlsx'))->export();
     }
+
+    public function stockActual()
+    {
+        $productos = DB::table('vw_stock_actual_productos')->get();
+        return view('reportes.stock-actual', compact('productos'));
+    }
+
+    public function stockActualPdf()
+    {
+        $productos = DB::table('vw_stock_actual_productos')->get();
+        $pdf = Pdf::loadView('reportes.stock-actual-pdf', compact('productos'));
+        return $pdf->download('stock-actual.pdf');
+    }
+
+    public function stockActualExcel()
+    {
+        $productos = DB::table('vw_stock_actual_productos')->get();
+
+        $headers = [
+            'index' => 'ID',
+            'nombre' => 'Producto',
+            'descripcion' => 'Descripción',
+            'stock_actual' => 'Stock Actual',
+            'stock_minimo' => 'Stock Mínimo',
+            'precio_compra' => 'Precio Compra',
+            'precio_venta' => 'Precio Venta',
+            'categoria' => 'Categoría',
+            'proveedor' => 'Proveedor',
+        ];
+
+        $data = $productos->map(function ($item, $key) {
+            return [
+                'index' => $key + 1,
+                'nombre' => $item->nombre,
+                'descripcion' => $item->descripcion,
+                'stock_actual' => $item->stock_actual,
+                'stock_minimo' => $item->stock_minimo,
+                'precio_compra' => number_format($item->precio_compra, 2),
+                'precio_venta' => number_format($item->precio_venta, 2),
+                'categoria' => $item->categoria,
+                'proveedor' => $item->proveedor,
+            ];
+        })->toArray();
+
+        return (new ExcelExporter($data, $headers, 'stock-actual.xlsx'))->export();
+    }
 }

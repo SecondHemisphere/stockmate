@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Informe - Productos Más Vendidos</title>
+    <title>Informe - Stock Actual</title>
     <style>
         body {
             font-family: "Segoe UI", Arial, sans-serif;
@@ -88,7 +88,7 @@
     <div class="header">
         <img src="{{ public_path('images/logo_empresa.png') }}" alt="Logo Empresa">
         <div class="empresa">Papelería El Lápiz Veloz</div>
-        <div class="titulo">Informe de Productos Más Vendidos</div>
+        <div class="titulo">Informe de Stock Actual de Productos</div>
     </div>
 
     <div class="info">
@@ -99,17 +99,29 @@
     <table>
         <thead>
             <tr>
-                <th>Posición</th>
+                <th>ID</th>
                 <th>Producto</th>
-                <th>Total Vendido</th>
+                <th>Descripción</th>
+                <th>Stock Actual</th>
+                <th>Stock Mínimo</th>
+                <th>Precio Compra</th>
+                <th>Precio Venta</th>
+                <th>Categoría</th>
+                <th>Proveedor</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($productos as $i => $p)
                 <tr>
-                    <td style="text-align: center;">{{ $i + 1 }}º</td>
+                    <td style="text-align: center;">{{ $i + 1 }}</td>
                     <td>{{ $p->nombre }}</td>
-                    <td style="font-weight: bold; text-align: center;">{{ $p->total_vendido }}</td>
+                    <td>{{ $p->descripcion }}</td>
+                    <td style="text-align: center;">{{ $p->stock_actual }}</td>
+                    <td style="text-align: center;">{{ $p->stock_minimo }}</td>
+                    <td>${{ number_format($p->precio_compra, 2) }}</td>
+                    <td>${{ number_format($p->precio_venta, 2) }}</td>
+                    <td>{{ $p->categoria }}</td>
+                    <td>{{ $p->proveedor }}</td>
                 </tr>
             @endforeach
         </tbody>

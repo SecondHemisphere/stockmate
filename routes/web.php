@@ -66,6 +66,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('clientes-frecuentes', [ReporteController::class, 'clientesFrecuentes'])->name('clientes-frecuentes');
         Route::get('clientes-frecuentes/pdf', [ReporteController::class, 'clientesFrecuentesPdf'])->name('clientes-frecuentes.pdf');
         Route::get('clientes-frecuentes/excel', [ReporteController::class, 'clientesFrecuentesExcel'])->name('clientes-frecuentes.excel');
+
+        Route::get('stock-actual', [ReporteController::class, 'stockActual'])->name('stock-actual');
+        Route::get('stock-actuals/pdf', [ReporteController::class, 'stockActualPdf'])->name('stock-actual.pdf');
+        Route::get('stock-actual/excel', [ReporteController::class, 'stockActualExcel'])->name('stock-actual.excel');
     });
 });
 
