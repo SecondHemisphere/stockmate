@@ -25,7 +25,7 @@
             <div class="border p-6 rounded-xl shadow-lg bg-white hover:shadow-xl transition duration-300 ease-in-out">
                 <h3 class="text-lg font-semibold text-gray-800 mb-3">Productos Más Vendidos</h3>
                 <p class="text-sm text-gray-600 mb-4">Ranking por cantidad vendida.</p>
-                <a href="{{ route('reportes.stock-critico') }}"
+                <a href="{{ route('reportes.top-productos') }}"
                     class="btn px-6 py-3 rounded-lg bg-teal-600 text-white hover:bg-teal-800 flex items-center gap-2 transition duration-300">
                     <i class="fas fa-table text-lg"></i> Ver
                 </a>
@@ -95,7 +95,7 @@
             <div class="border p-6 rounded-xl shadow-lg bg-white hover:shadow-xl transition duration-300 ease-in-out">
                 <h3 class="text-lg font-semibold text-gray-800 mb-3">Clientes Frecuentes</h3>
                 <p class="text-sm text-gray-600 mb-4">Clientes con más compras en un período.</p>
-                <a href="{{ route('reportes.stock-critico') }}"
+                <a href="{{ route('reportes.clientes-frecuentes') }}"
                     class="btn px-6 py-3 rounded-lg bg-teal-600 text-white hover:bg-teal-800 flex items-center gap-2 transition duration-300">
                     <i class="fas fa-table text-lg"></i> Ver
                 </a>

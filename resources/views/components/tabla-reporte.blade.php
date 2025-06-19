@@ -11,32 +11,39 @@
         </tr>
     </thead>
     <tbody>
-        @forelse ($filas as $fila)
+        @forelse ($filas as $index => $fila)
             <tr class="border-t">
                 @foreach ($columnas as $col)
                     <td class="px-4 py-2 border-b border-gray-200">
                         @php
                             $campo = $col['campo'];
                             $tipo = $col['tipo'] ?? 'texto';
-                            $valor = $fila->{$campo} ?? '';
                         @endphp
 
-                        @switch($tipo)
-                            @case('fecha')
-                                {{ $valor ? \Carbon\Carbon::parse($valor)->format('d/m/Y') : '-' }}
-                            @break
+                        @if ($campo === 'index')
+                            {{ $index + 1 }}º
+                        @else
+                            @php
+                                $valor = $fila->{$campo} ?? '';
+                            @endphp
 
-                            @case('imagen')
-                                @if ($valor)
-                                    <img src="{{ asset('uploads/' . $valor) }}" alt="Imagen" class="h-10 w-auto rounded">
-                                @else
-                                    <span class="text-gray-400 italic">Sin imagen</span>
-                                @endif
-                            @break
+                            @switch($tipo)
+                                @case('fecha')
+                                    {{ $valor ? \Carbon\Carbon::parse($valor)->format('d/m/Y') : '-' }}
+                                @break
 
-                            @default
-                                {{ $valor }}
-                        @endswitch
+                                @case('imagen')
+                                    @if ($valor)
+                                        <img src="{{ asset('uploads/' . $valor) }}" alt="Imagen" class="h-10 w-auto rounded">
+                                    @else
+                                        <span class="text-gray-400 italic">Sin imagen</span>
+                                    @endif
+                                @break
+
+                                @default
+                                    {{ $valor }}
+                            @endswitch
+                        @endif
                     </td>
                 @endforeach
             </tr>

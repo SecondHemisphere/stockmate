@@ -59,9 +59,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('stock-critico/pdf', [ReporteController::class, 'productosStockCriticoPdf'])->name('stock-critico.pdf');
         Route::get('stock-critico/excel', [ReporteController::class, 'productosStockCriticoExcel'])->name('stock-critico.excel');
 
-        Route::get('top-productos', [ReporteController::class, 'topProductosExcel'])->name('top-productos');
-        Route::get('top-productos/pdf', [ReporteController::class, 'topProductosExcelPdf'])->name('top-productos.pdf');
+        Route::get('top-productos', [ReporteController::class, 'topProductos'])->name('top-productos');
+        Route::get('top-productos/pdf', [ReporteController::class, 'topProductosPdf'])->name('top-productos.pdf');
         Route::get('top-productos/excel', [ReporteController::class, 'topProductosExcel'])->name('top-productos.excel');
+
+        Route::get('clientes-frecuentes', [ReporteController::class, 'clientesFrecuentes'])->name('clientes-frecuentes');
+        Route::get('clientes-frecuentes/pdf', [ReporteController::class, 'clientesFrecuentesPdf'])->name('clientes-frecuentes.pdf');
+        Route::get('clientes-frecuentes/excel', [ReporteController::class, 'clientesFrecuentesExcel'])->name('clientes-frecuentes.excel');
     });
 });
 

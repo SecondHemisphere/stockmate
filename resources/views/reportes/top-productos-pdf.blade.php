@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Informe - Stock Crítico</title>
+    <title>Informe - Productos Más Vendidos</title>
     <style>
         body {
             font-family: "Segoe UI", Arial, sans-serif;
@@ -48,7 +48,6 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 11px;
-            /* se mantiene como pediste */
         }
 
         th {
@@ -89,7 +88,7 @@
     <div class="header">
         <img src="{{ public_path('images/logo_empresa.png') }}" alt="Logo Empresa">
         <div class="empresa">Papelería El Lápiz Veloz</div>
-        <div class="titulo">Informe de Productos con Stock Crítico</div>
+        <div class="titulo">Informe de Productos Más Vendidos</div>
     </div>
 
     <div class="info">
@@ -100,25 +99,17 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th>
+                <th>Posición</th>
                 <th>Producto</th>
-                <th>Descripción</th>
-                <th>Stock Actual</th>
-                <th>Stock Mínimo</th>
-                <th>Categoría</th>
-                <th>Proveedor</th>
+                <th>Total Vendido</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($productos as $i => $p)
                 <tr>
-                    <td style="text-align: center;">{{ $i + 1 }}</td>
+                    <td style="text-align: center;">{{ $i + 1 }}º</td>
                     <td>{{ $p->nombre }}</td>
-                    <td>{{ $p->descripcion }}</td>
-                    <td style="color: #d32f2f; font-weight: bold;">{{ $p->stock_actual }}</td>
-                    <td>{{ $p->stock_minimo }}</td>
-                    <td>{{ $p->categoria }}</td>
-                    <td>{{ $p->proveedor }}</td>
+                    <td style="font-weight: bold; text-align: center;">{{ $p->total_vendido }}</td>
                 </tr>
             @endforeach
         </tbody>
