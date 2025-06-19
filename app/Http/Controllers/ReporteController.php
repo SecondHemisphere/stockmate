@@ -3,12 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ExcelExporter;
-use App\Models\Producto;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ReporteController extends Controller
 {

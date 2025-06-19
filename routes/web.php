@@ -52,14 +52,16 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('reportes')->name('reportes.')->group(function () {
 
-        // Página principal de reportes (lista o dashboard)
+        // Página principal de reportes
         Route::get('/', [ReporteController::class, 'index'])->name('index');
 
-        // Rutas para el reporte de productos con stock crítico
         Route::get('stock-critico', [ReporteController::class, 'productosStockCritico'])->name('stock-critico');
-
         Route::get('stock-critico/pdf', [ReporteController::class, 'productosStockCriticoPdf'])->name('stock-critico.pdf');
         Route::get('stock-critico/excel', [ReporteController::class, 'productosStockCriticoExcel'])->name('stock-critico.excel');
+
+        Route::get('top-productos', [ReporteController::class, 'topProductosExcel'])->name('top-productos');
+        Route::get('top-productos/pdf', [ReporteController::class, 'topProductosExcelPdf'])->name('top-productos.pdf');
+        Route::get('top-productos/excel', [ReporteController::class, 'topProductosExcel'])->name('top-productos.excel');
     });
 });
 

@@ -40,7 +40,7 @@ class ExcelExporter
         $drawing = new Drawing();
         $drawing->setName('Logo Empresa');
         $drawing->setDescription('Logo Empresa');
-        $drawing->setPath(public_path('images/logo_empresa.png')); // Ajusta la ruta a tu logo
+        $drawing->setPath(public_path('images/logo_empresa.png'));
         $drawing->setHeight(60);
         $drawing->setCoordinates('B1');
         $drawing->setOffsetX(10);

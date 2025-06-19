@@ -3,69 +3,66 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Reporte - Stock Crítico</title>
+    <title>Informe - Stock Crítico</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             font-size: 12px;
-            background-color: #fff;
             color: #333;
+            padding: 30px;
         }
 
         .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 3px solid #faba08;
-            padding-bottom: 10px;
+            text-align: center;
             margin-bottom: 20px;
         }
 
-        .logo-svg {
-            width: 70px;
-            height: 70px;
-            fill: #0c68a0;
+        .header img {
+            width: 80px;
+            height: auto;
+            margin-bottom: 10px;
         }
 
-        .title {
-            text-align: center;
+        .header .empresa {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0c68a0;
+        }
+
+        .header .titulo {
+            font-size: 16px;
             color: #d32f2f;
-            font-size: 20px;
-            flex: 1;
+            margin-top: 5px;
         }
 
         .info {
             text-align: right;
-            font-size: 10px;
+            font-size: 11px;
+            margin-bottom: 20px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
             font-size: 11px;
         }
 
         th {
             background-color: #0c68a0;
-            color: white;
+            color: #fff;
             text-align: center;
             padding: 8px;
             border: 1px solid #ccc;
         }
 
         td {
-            border: 1px solid #e1d6b4;
+            border: 1px solid #ccc;
             padding: 6px;
             text-align: left;
         }
 
         tr:nth-child(even) {
-            background-color: #fdfaf3;
-        }
-
-        tr:hover {
-            background-color: #f1f8fc;
+            background-color: #f9f9f9;
         }
 
         .footer {
@@ -73,13 +70,8 @@
             text-align: center;
             font-size: 10px;
             color: #666;
-            border-top: 1px solid #d8be55;
+            border-top: 1px solid #ccc;
             padding-top: 10px;
-        }
-
-        .highlight {
-            color: #c9a81f;
-            font-weight: bold;
         }
     </style>
 </head>
@@ -87,14 +79,14 @@
 <body>
 
     <div class="header">
-        <div class="title">
-            <strong>Reporte de Productos con Stock Crítico</strong>
-        </div>
+        <img src="{{ public_path('images/logo_empresa.png') }}" alt="Logo Empresa">
+        <div class="empresa">Papelería El Lápiz Veloz</div>
+        <div class="titulo">Informe de Productos con Stock Crítico</div>
+    </div>
 
-        <div class="info">
-            <p><strong>Fecha:</strong> {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</p>
-            <p><strong>Usuario:</strong> {{ auth()->user()->nombre ?? 'Sistema' }}</p>
-        </div>
+    <div class="info">
+        <p><strong>Fecha:</strong> {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</p>
+        <p><strong>Usuario:</strong> {{ auth()->user()->nombre ?? 'Sistema' }}</p>
     </div>
 
     <table>
@@ -125,8 +117,8 @@
     </table>
 
     <div class="footer">
-        <p>Este documento ha sido generado automáticamente por el sistema de inventarios.</p>
-        <p class="highlight">Empresa XYZ © {{ date('Y') }} - Todos los derechos reservados</p>
+        Documento generado automáticamente por el sistema de inventario de <strong>El Lápiz Veloz</strong>. <br>
+        © {{ date('Y') }} Todos los derechos reservados.
     </div>
 
 </body>
