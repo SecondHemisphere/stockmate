@@ -11,5 +11,5 @@
         </flux:breadcrumbs.item>
     </flux:breadcrumbs>
 
-    <x-form-rol :rol="$rol" :action="route('roles.update', ['rol' => $rol->id])" method="PUT" titulo="Editar Rol" />
+    <x-form-rol :rol="$rol" :permisos="$permisos" :action="route('roles.update', $rol)" method="PUT" titulo="Editar Rol" />
 </x-layouts.app>

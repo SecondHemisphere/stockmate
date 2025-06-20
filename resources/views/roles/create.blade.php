@@ -12,6 +12,6 @@
         </flux:breadcrumbs.item>
     </flux:breadcrumbs>
 
-    <x-form-rol :action="route('roles.store')" method="POST" titulo="Crear Rol" />
+    <x-form-rol :permisos="$permisos" :action="route('roles.store')" method="POST" titulo="Crear Rol" />
 
 </x-layouts.app>
