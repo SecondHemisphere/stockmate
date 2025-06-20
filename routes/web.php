@@ -82,6 +82,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('ventas-filtradas', [ReporteController::class, 'ventasFiltradas'])->name('ventas-filtradas');
         Route::get('ventas-filtradas/pdf', [ReporteController::class, 'ventasFiltradasPdf'])->name('ventas-filtradas.pdf');
         Route::get('ventas-filtradas/excel', [ReporteController::class, 'ventasFiltradasExcel'])->name('ventas-filtradas.excel');
+
+        Route::get('historial-producto', [ReporteController::class, 'historialProducto'])->name('historial-producto');
+        Route::get('historial-producto/pdf', [ReporteController::class, 'historialProductoPdf'])->name('historial-producto.pdf');
+        Route::get('historial-producto/excel', [ReporteController::class, 'historialProductoExcel'])->name('historial-producto.excel');
     });
 });
 

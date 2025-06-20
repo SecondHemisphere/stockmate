@@ -394,4 +394,83 @@ class ReporteController extends Controller
 
         return (new ExcelExporter($data, $headers, 'ventas.xlsx'))->export();
     }
+
+    public function historialProducto(Request $request)
+    {
+        $productos = DB::table('productos')->select('id', 'nombre')->get();
+
+        $query = DB::table('vw_historial_producto')
+            ->orderBy('producto_id')
+            ->orderBy('fecha');
+
+        if ($request->filled('producto_id')) {
+            $query->where('producto_id', $request->producto_id);
+        }
+
+        $movimientos = $query->get()->map(function ($item) {
+            $item->fecha_formateada = \Carbon\Carbon::parse($item->fecha)->format('d/m/Y H:i');
+            $item->precio_unitario_formateado = '$' . number_format($item->precio_unitario, 2, '.', ',');
+            $item->precio_total_formateado = '$' . number_format($item->precio_total, 2, '.', ',');
+            return $item;
+        });
+
+        return view('reportes.historial-producto', compact('movimientos', 'productos'));
+    }
+
+    public function historialProductoPdf(Request $request)
+    {
+        $query = DB::table('vw_historial_producto')
+            ->orderBy('producto_id')
+            ->orderBy('fecha');
+
+        if ($request->filled('producto_id')) {
+            $query->where('producto_id', $request->producto_id);
+        }
+
+        $movimientos = $query->get();
+
+        $pdf = Pdf::loadView('reportes.historial-producto-pdf', compact('movimientos'));
+
+        return $pdf->download('historial-producto.pdf');
+    }
+
+    public function historialProductoExcel(Request $request)
+    {
+        $query = DB::table('vw_historial_producto')
+            ->orderBy('producto_id')
+            ->orderBy('fecha');
+
+        if ($request->filled('producto_id')) {
+            $query->where('producto_id', $request->producto_id);
+        }
+
+        $movimientos = $query->get();
+
+        $headers = [
+            'fecha' => 'Fecha',
+            'producto_nombre' => 'Producto',
+            'tipo_movimiento' => 'Tipo',
+            'cantidad' => 'Cantidad',
+            'precio_unitario' => 'Precio Unitario',
+            'precio_total' => 'Precio Total',
+            'relacionado' => 'Proveedor/Cliente',
+            'usuario_nombre' => 'Usuario',
+        ];
+
+        $data = $movimientos->map(function ($item, $key) {
+            return [
+                'index' => $key + 1,
+                'producto_nombre' => $item->producto_nombre,
+                'tipo_movimiento' => $item->tipo_movimiento,
+                'fecha' => \Carbon\Carbon::parse($item->fecha)->format('d/m/Y H:i'),
+                'cantidad' => $item->cantidad,
+                'precio_unitario' => number_format($item->precio_unitario, 2),
+                'precio_total' => number_format($item->precio_total, 2),
+                'relacionado' => $item->relacionado,
+                'usuario_nombre' => $item->usuario_nombre,
+            ];
+        })->toArray();
+
+        return (new ExcelExporter($data, $headers, 'historial-producto.xlsx'))->export();
+    }
 }
