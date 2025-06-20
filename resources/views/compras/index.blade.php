@@ -13,10 +13,11 @@
     @php
         $columnas = [
             ['campo' => 'id', 'titulo' => 'ID'],
+            ['campo' => 'fecha_transaccion', 'titulo' => 'Fecha de Compra'],
             ['campo' => 'producto_nombre', 'titulo' => 'Producto'],
             ['campo' => 'cantidad', 'titulo' => 'Cantidad'],
-            ['campo' => 'monto_total', 'titulo' => 'Monto Total'],
-            ['campo' => 'fecha_transaccion', 'titulo' => 'Fecha de Compra'],
+            ['campo' => 'monto_total', 'titulo' => 'Monto Total', 'tipo' => 'moneda'],
+            ['campo' => 'usuario_nombre', 'titulo' => 'Registrada Por'],
         ];
     @endphp
 

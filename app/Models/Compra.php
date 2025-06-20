@@ -14,6 +14,7 @@ class Compra extends Model
 
     protected $fillable = [
         'producto_id',
+        'usuario_id',
         'monto_total',
         'cantidad',
         'fecha_transaccion',
@@ -25,6 +26,12 @@ class Compra extends Model
         'fecha_transaccion' => 'datetime',
     ];
 
+    // Relación con Usuario (quien registró la compra)
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'usuario_id');
+    }
+
     // Relación con Producto
     public function producto()
     {
@@ -34,5 +41,10 @@ class Compra extends Model
     public function getProductoNombreAttribute()
     {
         return $this->producto ? $this->producto->nombre : 'Sin producto';
+    }
+
+    public function getUsuarioNombreAttribute()
+    {
+        return $this->usuario ? $this->usuario->nombre : 'Sistema';
     }
 }

@@ -14,12 +14,14 @@
 
     @php
         $columnas = [
-            ['campo' => 'id', 'titulo' => 'ID'],
             ['campo' => 'numero_factura', 'titulo' => 'Número Factura'],
             ['campo' => 'cliente_nombre', 'titulo' => 'Cliente'],
-            ['campo' => 'monto_total', 'titulo' => 'Monto Total'],
+            ['campo' => 'total_con_iva', 'titulo' => 'Total con IVA', 'tipo' => 'moneda'],
+            ['campo' => 'monto_total', 'titulo' => 'Monto Total', 'tipo' => 'moneda'],
+            ['campo' => 'monto_descuento', 'titulo' => 'Descuento', 'tipo' => 'moneda'],
             ['campo' => 'fecha', 'titulo' => 'Fecha', 'tipo' => 'fecha'],
             ['campo' => 'metodo_pago', 'titulo' => 'Método Pago'],
+            ['campo' => 'usuario_nombre', 'titulo' => 'Registrada Por'],
             ['campo' => 'observaciones', 'titulo' => 'Observaciones'],
         ];
     @endphp

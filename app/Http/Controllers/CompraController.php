@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Compra;
 use App\Models\Producto;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 
 class CompraController extends Controller
@@ -34,7 +35,9 @@ class CompraController extends Controller
     public function create()
     {
         $productos = Producto::orderBy('nombre')->get();
-        return view('compras.create', compact('productos'));
+        $usuarios = Usuario::orderBy('nombre')->get();
+
+        return view('ventas.create', compact('productos', 'usuarios'));
     }
 
     /**
@@ -44,6 +47,7 @@ class CompraController extends Controller
     {
         $datosValidados = $request->validate([
             'producto_id' => 'required|exists:productos,id',
+            'usuario_id' => 'required|exists:usuarios,id',
             'monto_total' => 'required|numeric|min:0',
             'cantidad' => 'required|integer|min:1',
             'fecha_transaccion' => 'required|date',

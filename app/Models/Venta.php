@@ -70,4 +70,9 @@ class Venta extends Model
 
         return $metodos[$this->metodo_pago] ?? 'Desconocido';
     }
+
+    public function getUsuarioNombreAttribute()
+    {
+        return $this->usuario ? $this->usuario->nombre : 'Sistema';
+    }
 }

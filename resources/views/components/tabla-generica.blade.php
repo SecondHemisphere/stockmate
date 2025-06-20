@@ -42,6 +42,10 @@
                                 @endif
                             @break
 
+                            @case('moneda')
+                                {{ $valor !== null ? '$' . number_format($valor, 2, ',', '.') : '-' }}
+                            @break
+
                             @default
                                 @if ($campo === 'direccion')
                                     @php
@@ -74,7 +78,6 @@
                         </button>
                     </form>
                 </td>
-
             </tr>
             @empty
                 <tr>
