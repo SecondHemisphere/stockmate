@@ -87,7 +87,7 @@ class UsuarioController extends Controller
         $usuario->update($datosValidados);
 
         return redirect()
-            ->route('usuarios.edit', $usuario)
+            ->route('usuarios.index', $usuario)
             ->with('swal', [
                 'icon' => 'success',
                 'title' => '¡Usuario actualizado!',
