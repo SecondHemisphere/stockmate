@@ -8,6 +8,12 @@
                 'current' => request()->routeIs('dashboard'),
             ],
             [
+                'name' => 'Roles y Permisos',
+                'icon' => 'key',
+                'url' => route('roles.index'),
+                'current' => request()->routeIs('roles.*'),
+            ],
+            [
                 'name' => 'Usuarios',
                 'icon' => 'user',
                 'url' => route('usuarios.index'),
@@ -76,6 +82,7 @@
         body {
             background-color: #e0f7fa;
         }
+
         /* === BARRA SUPERIOR === */
         header.topbar {
             position: fixed;

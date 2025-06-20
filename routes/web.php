@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\RolController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\CompraController;
 use App\Http\Controllers\ReporteController;
@@ -38,6 +39,11 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('proveedores', ProveedorController::class)->parameters([
         'proveedores' => 'proveedor'
     ]);
+
+    Route::resource('roles', RolController::class)->parameters([
+        'roles' => 'rol',
+    ]);
+    
     Route::resource('clientes', ClienteController::class)->names('clientes');
     Route::resource('usuarios', UsuarioController::class)->names('usuarios');
 
