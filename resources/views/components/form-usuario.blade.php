@@ -3,6 +3,7 @@
     'action',
     'method' => 'POST',
     'titulo' => 'Formulario Usuario',
+    'roles' => collect(),
 ])
 
 <div class="max-w-xl mx-auto bg-white rounded-lg shadow-md p-6">
@@ -36,9 +37,25 @@
             @enderror
         </div>
 
+        <!-- Rol -->
+        <div>
+            <label for="rol_id" class="block mb-2 font-semibold text-gray-800">Rol</label>
+            <select name="rol_id" id="rol_id" required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                @foreach ($roles as $rol)
+                    <option value="{{ $rol->id }}"
+                        {{ old('rol_id', $usuario->rol_id ?? '') == $rol->id ? 'selected' : '' }}>
+                        {{ $rol->nombre }}
+                    </option>
+                @endforeach
+            </select>
+            @error('rol_id')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+        </div>
+
         <!-- Contraseña (solo para crear) -->
         @if (!isset($usuario))
-            <!-- Contraseña -->
             <div>
                 <label for="contrasena" class="block mb-2 font-semibold text-gray-800">Contraseña</label>
                 <input type="password" name="contrasena" id="contrasena" placeholder="Ingrese una contraseña"
@@ -48,7 +65,6 @@
                 @enderror
             </div>
 
-            <!-- Confirmar Contraseña -->
             <div>
                 <label for="contrasena_confirmation" class="block mb-2 font-semibold text-gray-800">Confirmar
                     Contraseña</label>
@@ -59,20 +75,23 @@
         @endif
 
         <!-- Estado -->
-        <div>
-            <label for="estado" class="block mb-2 font-semibold text-gray-800">Estado</label>
-            @php
-                $estadoSeleccionado = old('estado', $usuario->estado ?? 'ACTIVO');
-            @endphp
-            <select name="estado" id="estado" required
-                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                <option value="ACTIVO" {{ $estadoSeleccionado === 'ACTIVO' ? 'selected' : '' }}>Activo</option>
-                <option value="INACTIVO" {{ $estadoSeleccionado === 'INACTIVO' ? 'selected' : '' }}>Inactivo</option>
-            </select>
-            @error('estado')
-                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
+        @if (isset($usuario))
+            <div>
+                <label for="estado" class="block mb-2 font-semibold text-gray-800">Estado</label>
+                @php
+                    $estadoSeleccionado = old('estado', $usuario->estado ?? 'ACTIVO');
+                @endphp
+                <select name="estado" id="estado" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    <option value="ACTIVO" {{ $estadoSeleccionado === 'ACTIVO' ? 'selected' : '' }}>Activo</option>
+                    <option value="INACTIVO" {{ $estadoSeleccionado === 'INACTIVO' ? 'selected' : '' }}>Inactivo
+                    </option>
+                </select>
+                @error('estado')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+        @endif
 
         <!-- Botón -->
         <div>

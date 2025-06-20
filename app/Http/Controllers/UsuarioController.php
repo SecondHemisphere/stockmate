@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Usuario;
+use App\Models\Rol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,11 +14,11 @@ class UsuarioController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Usuario::query();
+        $query = Usuario::with('rol');
 
         if ($search = $request->input('search')) {
             $query->where('nombre', 'like', "%{$search}%")
-                  ->orWhere('correo', 'like', "%{$search}%");
+                ->orWhere('correo', 'like', "%{$search}%");
         }
 
         $usuarios = $query->orderBy('nombre')->paginate(10)->withQueryString();
@@ -30,7 +31,8 @@ class UsuarioController extends Controller
      */
     public function create()
     {
-        return view('usuarios.create');
+        $roles = Rol::orderBy('nombre')->get();
+        return view('usuarios.create', compact('roles'));
     }
 
     /**
@@ -42,7 +44,7 @@ class UsuarioController extends Controller
             'nombre' => 'required|string|min:3|max:255',
             'correo' => 'required|email|max:255|unique:usuarios,correo',
             'contrasena' => 'required|string|min:6|confirmed',
-            'estado' => 'required|in:ACTIVO,INACTIVO',
+            'rol_id' => 'required|exists:roles,id',
         ]);
 
         $datosValidados['contrasena'] = Hash::make($datosValidados['contrasena']);
@@ -63,7 +65,8 @@ class UsuarioController extends Controller
      */
     public function edit(Usuario $usuario)
     {
-        return view('usuarios.edit', compact('usuario'));
+        $roles = Rol::orderBy('nombre')->get();
+        return view('usuarios.edit', compact('usuario', 'roles'));
     }
 
     /**
@@ -76,6 +79,7 @@ class UsuarioController extends Controller
             'correo' => 'required|email|max:255|unique:usuarios,correo,' . $usuario->id,
             'contrasena' => 'nullable|string|min:6|confirmed',
             'estado' => 'required|in:ACTIVO,INACTIVO',
+            'rol_id' => 'required|exists:roles,id',
         ]);
 
         if (!empty($datosValidados['contrasena'])) {
@@ -87,7 +91,7 @@ class UsuarioController extends Controller
         $usuario->update($datosValidados);
 
         return redirect()
-            ->route('usuarios.index', $usuario)
+            ->route('usuarios.index')
             ->with('swal', [
                 'icon' => 'success',
                 'title' => '¡Usuario actualizado!',

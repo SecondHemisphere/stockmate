@@ -15,6 +15,7 @@
             ['campo' => 'id', 'titulo' => 'ID'],
             ['campo' => 'nombre', 'titulo' => 'Nombre'],
             ['campo' => 'correo', 'titulo' => 'Correo'],
+            ['campo' => 'rol_nombre', 'titulo' => 'Rol'],
             ['campo' => 'estado', 'titulo' => 'Estado', 'tipo' => 'estado'],
         ];
     @endphp

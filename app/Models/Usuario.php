@@ -22,11 +22,23 @@ class Usuario extends Authenticatable
         'correo',
         'contrasena',
         'estado',
+        'rol_id',
     ];
 
     protected $hidden = [
         'contrasena',
     ];
+
+    // Relaciones
+    public function rol()
+    {
+        return $this->belongsTo(Rol::class);
+    }
+
+    public function getRolNombreAttribute()
+    {
+        return $this->rol ? $this->rol->nombre : 'Sin rol';
+    }
 
     /**
      * Devuelve la contraseña para autenticación.

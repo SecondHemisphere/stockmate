@@ -12,6 +12,6 @@
         </flux:breadcrumbs.item>
     </flux:breadcrumbs>
 
-    <x-form-usuario :action="route('usuarios.store')" method="POST" titulo="Crear Usuario" />
+    <x-form-usuario :action="route('usuarios.store')" :roles="$roles" method="POST" titulo="Crear Usuario" />
 
 </x-layouts.app>

@@ -11,5 +11,6 @@
         </flux:breadcrumbs.item>
     </flux:breadcrumbs>
 
-    <x-form-usuario :usuario="$usuario" :action="route('usuarios.update', ['usuario' => $usuario->id])" method="PUT" titulo="Editar Usuario" />
+    <x-form-usuario :usuario="$usuario" :action="route('usuarios.update', ['usuario' => $usuario->id])" :roles="$roles" method="PUT" titulo="Editar Usuario" />
+
 </x-layouts.app>
