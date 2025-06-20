@@ -20,7 +20,7 @@
             ['campo' => 'monto_total', 'titulo' => 'Monto Total', 'tipo' => 'moneda'],
             ['campo' => 'monto_descuento', 'titulo' => 'Descuento', 'tipo' => 'moneda'],
             ['campo' => 'fecha', 'titulo' => 'Fecha', 'tipo' => 'fecha'],
-            ['campo' => 'metodo_pago', 'titulo' => 'Método Pago'],
+            ['campo' => 'metodo_pago_nombre', 'titulo' => 'Método Pago'],
             ['campo' => 'usuario_nombre', 'titulo' => 'Registrada Por'],
             ['campo' => 'observaciones', 'titulo' => 'Observaciones'],
         ];
