@@ -19,46 +19,80 @@ Route::get('/', function () {
     return redirect('/login');
 })->name('home');
 
-// Redirección si se visita /dashboard sin autenticación
+// Dashboard protegido
 Route::get('dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-// Rutas protegidas por autenticación
+// Rutas protegidas por autenticación y permisos
 Route::middleware(['auth'])->group(function () {
 
-    // Ajustes de cuenta del usuario
+    // Ajustes de cuenta del usuario sin permisos específicos (solo auth)
     Route::redirect('settings', 'settings/profile');
     Route::get('settings/profile', Profile::class)->name('settings.profile');
     Route::get('settings/password', Password::class)->name('settings.password');
     // Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 
-    // Recursos principales
-    Route::resource('categorias', CategoriaController::class)->names('categorias');
-    Route::resource('productos', ProductoController::class)->names('productos');
-    Route::resource('proveedores', ProveedorController::class)->parameters([
-        'proveedores' => 'proveedor'
-    ]);
+    // Categorías: permisos para ver, crear, editar, eliminar
+    Route::resource('categorias', CategoriaController::class)
+        ->names('categorias')
+        ->middleware('permission:categorias.ver|categorias.crear|categorias.editar|categorias.eliminar');
 
-    Route::resource('roles', RolController::class)->parameters([
-        'roles' => 'rol',
-    ]);
-    
-    Route::resource('clientes', ClienteController::class)->names('clientes');
-    Route::resource('usuarios', UsuarioController::class)->names('usuarios');
+    // Productos
+    Route::resource('productos', ProductoController::class)
+        ->names('productos')
+        ->middleware('permission:productos.ver|productos.crear|productos.editar|productos.eliminar');
 
-    Route::resource('ventas', VentaController::class)->names('ventas');
-    Route::resource('compras', CompraController::class)->names('compras');
+    // Proveedores
+    Route::resource('proveedores', ProveedorController::class)
+        ->parameters(['proveedores' => 'proveedor'])
+        ->middleware('permission:proveedores.ver|proveedores.crear|proveedores.editar|proveedores.eliminar');
 
-    // Búsquedas para select2 o ajax
-    Route::get('/api/categorias/search', [CategoriaController::class, 'search'])->name('categorias.search');
-    Route::get('/api/proveedores/search', [ProveedorController::class, 'search'])->name('proveedores.search');
-    Route::get('/api/productos/search', [ProductoController::class, 'search'])->name('productos.search');
-    Route::get('/api/clientes/search', [ClienteController::class, 'search'])->name('clientes.search');
+    // Roles
+    Route::resource('roles', RolController::class)
+        ->parameters(['roles' => 'rol'])
+        ->middleware('permission:roles.ver|roles.crear|roles.editar|roles.eliminar');
 
-    Route::prefix('reportes')->name('reportes.')->group(function () {
+    // Clientes
+    Route::resource('clientes', ClienteController::class)
+        ->names('clientes')
+        ->middleware('permission:clientes.ver|clientes.crear|clientes.editar|clientes.eliminar');
 
-        // Página principal de reportes
+    // Usuarios
+    Route::resource('usuarios', UsuarioController::class)
+        ->names('usuarios')
+        ->middleware('permission:usuarios.ver|usuarios.crear|usuarios.editar|usuarios.eliminar');
+
+    // Ventas
+    Route::resource('ventas', VentaController::class)
+        ->names('ventas')
+        ->middleware('permission:ventas.ver|ventas.crear|ventas.editar|ventas.eliminar');
+
+    // Compras
+    Route::resource('compras', CompraController::class)
+        ->names('compras')
+        ->middleware('permission:compras.ver|compras.crear|compras.editar|compras.eliminar');
+
+    // Búsquedas para select2 o ajax, si quieres protegerlas también, agrega permisos:
+    Route::get('/api/categorias/search', [CategoriaController::class, 'search'])
+        ->name('categorias.search')
+        ->middleware('permission:categorias.ver');
+
+    Route::get('/api/proveedores/search', [ProveedorController::class, 'search'])
+        ->name('proveedores.search')
+        ->middleware('permission:proveedores.ver');
+
+    Route::get('/api/productos/search', [ProductoController::class, 'search'])
+        ->name('productos.search')
+        ->middleware('permission:productos.ver');
+
+    Route::get('/api/clientes/search', [ClienteController::class, 'search'])
+        ->name('clientes.search')
+        ->middleware('permission:clientes.ver');
+
+    // Reportes protegidos (puedes usar permisos generales o específicos)
+    Route::prefix('reportes')->name('reportes.')->middleware('permission:reportes.ver')->group(function () {
+
         Route::get('/', [ReporteController::class, 'index'])->name('index');
 
         Route::get('stock-critico', [ReporteController::class, 'productosStockCritico'])->name('stock-critico');
@@ -74,7 +108,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('clientes-frecuentes/excel', [ReporteController::class, 'clientesFrecuentesExcel'])->name('clientes-frecuentes.excel');
 
         Route::get('stock-actual', [ReporteController::class, 'stockActual'])->name('stock-actual');
-        Route::get('stock-actuals/pdf', [ReporteController::class, 'stockActualPdf'])->name('stock-actual.pdf');
+        Route::get('stock-actual/pdf', [ReporteController::class, 'stockActualPdf'])->name('stock-actual.pdf');
         Route::get('stock-actual/excel', [ReporteController::class, 'stockActualExcel'])->name('stock-actual.excel');
 
         Route::get('proveedores-activos', [ReporteController::class, 'proveedoresActivos'])->name('proveedores-activos');

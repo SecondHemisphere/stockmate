@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
 class Usuario extends Authenticatable
@@ -12,9 +11,7 @@ class Usuario extends Authenticatable
     use Notifiable;
 
     protected $table = 'usuarios';
-
     protected $primaryKey = 'id';
-
     public $timestamps = false;
 
     protected $fillable = [
@@ -29,12 +26,13 @@ class Usuario extends Authenticatable
         'contrasena',
     ];
 
-    // Relaciones
+    // Relación: usuario pertenece a un rol
     public function rol()
     {
         return $this->belongsTo(Rol::class);
     }
 
+    // Nombre del rol
     public function getRolNombreAttribute()
     {
         return $this->rol ? $this->rol->nombre : 'Sin rol';
@@ -58,13 +56,34 @@ class Usuario extends Authenticatable
     {
         $storedHash = $this->contrasena;
 
-        // Si la longitud del hash es 64, asumimos que es SHA256 (hex)
         if (strlen($storedHash) === 64 && ctype_xdigit($storedHash)) {
-            // Comparar SHA256 del password con el hash guardado
             return hash('sha256', $passwordPlain) === $storedHash;
         }
 
-        // Si no, asumimos que es bcrypt, usamos la función estándar
         return Hash::check($passwordPlain, $storedHash);
+    }
+
+    /**
+     * Obtener permisos del rol del usuario.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function permisos()
+    {
+        if ($this->rol) {
+            return $this->rol->permisos; // Asumiendo relación en Rol con permisos()
+        }
+        return collect(); // Sin permisos si no tiene rol
+    }
+
+    /**
+     * Verifica si el usuario tiene un permiso específico.
+     *
+     * @param string $permisoNombre
+     * @return bool
+     */
+    public function hasPermission(string $permisoNombre): bool
+    {
+        return $this->permisos()->contains('nombre', $permisoNombre);
     }
 }

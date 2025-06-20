@@ -15,7 +15,7 @@
             <thead>
                 <tr>
                     <th class="border border-gray-300 px-4 py-2 text-left">ID</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left">Nombre del Rol</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Rol</th>
                     <th class="border border-gray-300 px-4 py-2 text-left">Permisos</th>
                     <th class="border border-gray-300 px-4 py-2 text-center">Acciones</th>
                 </tr>
