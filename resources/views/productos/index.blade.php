@@ -1,141 +1,58 @@
-@php
-    use Illuminate\Support\Facades\Storage;
-@endphp
-
 <x-layouts.app>
+
     <div class="mb-4 flex justify-between items-center">
         <flux:breadcrumbs>
-            <flux:breadcrumbs.item :href="route('dashboard')">
-                Inicio
-            </flux:breadcrumbs.item>
-            <flux:breadcrumbs.item>
-                Productos
-            </flux:breadcrumbs.item>
+            <flux:breadcrumbs.item :href="route('dashboard')">Inicio</flux:breadcrumbs.item>
+            <flux:breadcrumbs.item>Productos</flux:breadcrumbs.item>
         </flux:breadcrumbs>
     </div>
 
-    <div class="mb-4">
-        <form action="{{ route('productos.index') }}" method="GET">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <input type="text" name="search" placeholder="Buscar por nombre..."
-                        value="{{ request()->get('search') }}"
-                        class="border rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-cyan-400">
-                    <button type="submit" class="btn btn-neutral text-s px-4 py-2 rounded-lg">
-                        Buscar
-                    </button>
-                </div>
+    <x-busqueda-con-boton :ruta="route('productos.index')" :ruta_crear="route('productos.create')" :valor="request('search', '')" placeholder="Buscar por nombre..."
+        texto_boton="Buscar" texto_crear="Nuevo Producto" />
 
-                <a href="{{ route('productos.create') }}" class="btn btn-primary text-s px-6 py-2 rounded-lg">
-                    Nuevo Producto
-                </a>
-            </div>
-        </form>
-    </div>
+    @php
+        $columnas = [
+            ['campo' => 'id', 'titulo' => 'ID'],
+            ['campo' => 'ruta_imagen', 'titulo' => 'Imagen', 'tipo' => 'imagen'],
+            ['campo' => 'nombre', 'titulo' => 'Nombre'],
+            ['campo' => 'categoria_nombre', 'titulo' => 'Categoría'],
+            ['campo' => 'proveedor_nombre', 'titulo' => 'Proveedor'],
+            ['campo' => 'stock_actual', 'titulo' => 'Stock Actual'],
+            ['campo' => 'stock_minimo', 'titulo' => 'Stock Mínimo'],
+            ['campo' => 'precio_compra', 'titulo' => 'Precio Compra', 'tipo' => 'moneda'],
+            ['campo' => 'precio_venta', 'titulo' => 'Precio Venta', 'tipo' => 'moneda'],
+            ['campo' => 'estado', 'titulo' => 'Estado', 'tipo' => 'estado'],
+        ];
+    @endphp
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-        @foreach ($productos as $producto)
-            <div x-data="{ showDetails: false }"
-                class="rounded-lg overflow-hidden shadow-md bg-white hover:shadow-xl transition-shadow border border-[#faefbddc]">
-                <!-- Imagen -->
-                <div @click="$dispatch('open-image-modal', {
-                        imageUrl: '{{ is_array($producto['ruta_imagen'])
-                            ? Storage::url($producto['ruta_imagen'][0])
-                            : Storage::url($producto['ruta_imagen']) }}'
-                    })"
-                    class="cursor-pointer w-full h-40 bg-white flex items-center justify-center overflow-hidden rounded-t-lg">
-                    @if ($producto['ruta_imagen'] ?? false)
-                        <img src="{{ is_array($producto['ruta_imagen'])
-                            ? Storage::url($producto['ruta_imagen'][0])
-                            : Storage::url($producto['ruta_imagen']) }}"
-                            class="h-full w-full object-contain">
-                    @else
-                        <img src="{{ asset('images/no_image.png') }}" class="h-full w-full object-contain">
-                    @endif
-                </div>
-
-                <!-- Info del producto -->
-                <div class="p-4 text-black">
-                    <h3 class="text-lg font-semibold mb-1 break-words">{{ $producto->nombre }}</h3>
-                    <span
-                        class="inline-block text-xs font-semibold px-2 py-1 rounded-full
-                        {{ $producto->estado === 'ACTIVO' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                        {{ $producto->estado }}
-                    </span>
-
-                    <p class="text-sm text-cyan-600 font-medium">
-                        Categoría: {{ $producto->categoria->nombre ?? 'Sin categoría' }}
-                    </p>
-                    <p class="text-sm text-blue-800 font-medium">
-                        Proveedor: {{ $producto->proveedor->nombre ?? 'Sin proveedor' }}
-                    </p>
-                    <p class="text-sm text-green-600 font-medium">Stock actual: {{ $producto->stock_actual }}</p>
-                    <p class="text-sm text-red-600 mb-1 font-medium">Stock mínimo: {{ $producto->stock_minimo }}</p>
-                    <p class="text-sm font-bold text-gray-700">Precio de Compra: ${{ $producto->precio_compra }}</p>
-                    <p class="text-sm font-bold text-black">Precio de Venta: ${{ $producto->precio_venta }}</p>
-                </div>
-
-                <!-- Acciones -->
-                <div class="mb-2 border-t border-gray-200 pt-2 px-4 flex items-center justify-between gap-2">
-                    <button @click="showDetails = !showDetails"
-                        class="text-xs text-blue-600 font-medium hover:underline transition duration-200">
-                        <span x-show="!showDetails">➕ Ver detalles</span>
-                        <span x-show="showDetails">➖ Ocultar detalles</span>
-                    </button>
-
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('productos.edit', $producto) }}"
-                            class="btn text-xs px-4 py-2 rounded-lg bg-cyan-500 text-white hover:bg-cyan-700">
-                            Editar
-                        </a>
-
-                        <form action="{{ route('productos.destroy', $producto) }}" method="POST" class="delete-form">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                class="btn text-xs px-4 py-2 rounded-lg bg-[#d9534f] text-white hover:bg-[#c9302c]">
-                                Eliminar
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Descripción -->
-                <div x-show="showDetails" x-collapse x-transition
-                    class="text-sm text-gray-800 bg-gray-50 p-2 rounded-md border border-gray-100 mx-4 mb-4">
-                    {{ $producto->descripcion ?? 'Sin descripción disponible.' }}
-                </div>
-            </div>
-        @endforeach
-    </div>
+    <x-tabla-con-imagenes :columnas="$columnas" :filas="$productos" ruta-base="productos" />
 
     <x-paginacion :datos="$productos" />
 
-    <!-- Modal global fuera del flujo -->
-    <div x-data="{ open: false, imageUrl: '' }" x-on:open-image-modal.window="imageUrl = $event.detail.imageUrl; open = true"
-        x-show="open" x-transition.opacity.duration.100ms class="fixed inset-0 z-50 flex items-center justify-center"
-        x-cloak aria-modal="true" role="dialog">
-
-        <!-- Fondo borroso -->
-        <div @click="open = false" class="absolute inset-0 cursor-pointer backdrop-blur-sm" aria-hidden="true"></div>
-
-        <!-- Contenedor de la imagen -->
-        <div class="relative p-4 z-10 max-w-screen-lg w-full max-h-screen" @keydown.window.escape="open = false"
-            tabindex="0">
-            <!-- Botón cerrar -->
-            <button @click="open = false"
-                class="absolute top-4 right-4 bg-black bg-opacity-50 text-white text-sm font-semibold hover:bg-opacity-75 focus:outline-none focus:ring-2 focus:ring-white rounded px-3 py-1 shadow-lg z-20"
-                aria-label="Cerrar modal" type="button">
-                Cerrar
-            </button>
-
-            <!-- Imagen -->
-            <img :src="imageUrl" alt="Imagen del producto"
-                class="mx-auto max-w-full max-h-[50vh] object-contain rounded shadow-lg" />
-        </div>
+    <!-- Modal para imagen en grande -->
+    <div id="image-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden"
+        onclick="document.getElementById('image-modal').classList.add('hidden')">
+        <img id="image-modal-src" src="" alt="Imagen ampliada"
+            class="max-w-[600px] w-full h-auto rounded shadow-lg" />
     </div>
 
     @push('js')
         <script src="{{ mix('js/deleteConfirmation.js') }}"></script>
+
+        <script>
+            function openImageModal(src) {
+                const modal = document.getElementById('image-modal');
+                const modalImg = document.getElementById('image-modal-src');
+                modalImg.src = src;
+                modal.classList.remove('hidden');
+            }
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === "Escape") {
+                    document.getElementById('image-modal').classList.add('hidden');
+                }
+            });
+        </script>
     @endpush
+
 </x-layouts.app>

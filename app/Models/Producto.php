@@ -41,4 +41,14 @@ class Producto extends Model
     {
         return $this->belongsTo(Proveedor::class);
     }
+
+    public function getCategoriaNombreAttribute()
+    {
+        return $this->categoria ? $this->categoria->nombre : 'Sin categoría';
+    }
+
+    public function getProveedorNombreAttribute()
+    {
+        return $this->proveedor ? $this->proveedor->nombre : 'Sin proveedor';
+    }
 }
