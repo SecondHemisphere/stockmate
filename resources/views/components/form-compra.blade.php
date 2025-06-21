@@ -23,11 +23,11 @@
         <div class="flex-1 min-w-[220px]">
             <label for="producto-search" class="block mb-2 font-semibold text-gray-800">Producto</label>
             <input type="text" id="producto-search" placeholder="Buscar producto..." autocomplete="off"
-                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition mb-1"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md transition mb-1"
                 value="{{ $productoNombre }}">
 
             <select id="producto-select" name="producto_id" size="5"
-                class="w-full border border-gray-300 rounded-md" style="height:auto;">
+                class="select-buscable w-full border border-gray-300 rounded-md" style="height:auto;">
                 @if ($productoId)
                     <option value="{{ $productoId }}" selected>{{ $productoNombre }}</option>
                 @endif
@@ -80,7 +80,6 @@
         </div>
     </form>
 </div>
-<!-- ... (resto del formulario igual) -->
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -130,13 +129,11 @@
                 });
         }
 
-        // Cuando el usuario escribe en el input, cargar productos y mostrar el select
         input.addEventListener('input', () => {
             const query = input.value.trim();
             cargarProductos(query);
         });
 
-        // Cuando el usuario selecciona opción en select, oculta el select y actualiza input
         function opcionSeleccionada() {
             const selectedOption = select.options[select.selectedIndex];
             if (selectedOption && !selectedOption.disabled) {
@@ -148,11 +145,10 @@
         select.addEventListener('change', opcionSeleccionada);
         select.addEventListener('click', opcionSeleccionada);
 
-        // Al cargar la página: si ya hay producto seleccionado, ocultar el select
         if (input.value.trim()) {
             mostrarSelect(false);
         } else {
-            mostrarSelect(false); // También ocultamos si no hay valor (puedes cambiarlo a true si quieres)
+            mostrarSelect(false);
         }
     });
 </script>

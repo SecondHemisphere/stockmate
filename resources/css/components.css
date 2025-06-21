@@ -57,6 +57,32 @@
     --color-secondary: #607d8b;
 }
 
+.select-buscable {
+    width: 100%;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    background-color: white;
+    padding: 0 !important;
+    box-sizing: border-box;
+    max-height: calc(1.5em * 5 + 0.5em);
+    overflow-y: auto;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
+.select-buscable option {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+}
+
+.select-buscable option:disabled {
+    cursor: default;
+    font-style: italic;
+    background-color: transparent !important;
+}
+
 .form-custom {
     background-color: var(--color-background);
     border-radius: 10px;
