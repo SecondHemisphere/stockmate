@@ -6,7 +6,7 @@
     <div class="mb-4 flex justify-between items-center">
         <flux:breadcrumbs>
             <flux:breadcrumbs.item :href="route('dashboard')">
-                Dashboard
+                Inicio
             </flux:breadcrumbs.item>
             <flux:breadcrumbs.item>
                 Productos

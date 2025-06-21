@@ -4,7 +4,7 @@
 
     <div class="mb-4 flex justify-between items-center">
         <flux:breadcrumbs>
-            <flux:breadcrumbs.item :href="route('dashboard')">Dashboard</flux:breadcrumbs.item>
+            <flux:breadcrumbs.item :href="route('dashboard')">Inicio</flux:breadcrumbs.item>
             <flux:breadcrumbs.item>Ventas</flux:breadcrumbs.item>
         </flux:breadcrumbs>
     </div>

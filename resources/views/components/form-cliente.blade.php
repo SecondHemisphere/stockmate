@@ -17,9 +17,8 @@
         <!-- Nombre -->
         <div>
             <label for="nombre" class="block mb-2 font-semibold text-gray-800">Nombre</label>
-            <input type="text" name="nombre" id="nombre"
-                value="{{ old('nombre', $cliente->nombre ?? '') }}" required
-                placeholder="Nombre del cliente"
+            <input type="text" name="nombre" id="nombre" value="{{ old('nombre', $cliente->nombre ?? '') }}"
+                required placeholder="Nombre del cliente"
                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
             @error('nombre')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -29,8 +28,7 @@
         <!-- Correo -->
         <div>
             <label for="correo" class="block mb-2 font-semibold text-gray-800">Correo electrónico</label>
-            <input type="email" name="correo" id="correo"
-                value="{{ old('correo', $cliente->correo ?? '') }}"
+            <input type="email" name="correo" id="correo" value="{{ old('correo', $cliente->correo ?? '') }}"
                 placeholder="ejemplo@correo.com"
                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
             @error('correo')
@@ -41,8 +39,7 @@
         <!-- Teléfono -->
         <div>
             <label for="telefono" class="block mb-2 font-semibold text-gray-800">Teléfono</label>
-            <input type="text" name="telefono" id="telefono"
-                value="{{ old('telefono', $cliente->telefono ?? '') }}"
+            <input type="text" name="telefono" id="telefono" value="{{ old('telefono', $cliente->telefono ?? '') }}"
                 placeholder="Ej. 0987654321"
                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
             @error('telefono')
@@ -53,8 +50,7 @@
         <!-- Dirección -->
         <div>
             <label for="direccion" class="block mb-2 font-semibold text-gray-800">Dirección</label>
-            <textarea name="direccion" id="direccion" rows="3"
-                placeholder="Dirección del cliente"
+            <textarea name="direccion" id="direccion" rows="3" placeholder="Dirección del cliente"
                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">{{ old('direccion', $cliente->direccion ?? '') }}</textarea>
             @error('direccion')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -62,20 +58,23 @@
         </div>
 
         <!-- Estado -->
-        <div>
-            <label for="estado" class="block mb-2 font-semibold text-gray-800">Estado</label>
-            @php
-                $estadoSeleccionado = old('estado', $cliente->estado ?? 'ACTIVO');
-            @endphp
-            <select name="estado" id="estado" required
-                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                <option value="ACTIVO" {{ $estadoSeleccionado === 'ACTIVO' ? 'selected' : '' }}>Activo</option>
-                <option value="INACTIVO" {{ $estadoSeleccionado === 'INACTIVO' ? 'selected' : '' }}>Inactivo</option>
-            </select>
-            @error('estado')
-                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
+        @if (isset($cliente))
+            <div>
+                <label for="estado" class="block mb-2 font-semibold text-gray-800">Estado</label>
+                @php
+                    $estadoSeleccionado = old('estado', $cliente->estado ?? 'ACTIVO');
+                @endphp
+                <select name="estado" id="estado" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    <option value="ACTIVO" {{ $estadoSeleccionado === 'ACTIVO' ? 'selected' : '' }}>Activo</option>
+                    <option value="INACTIVO" {{ $estadoSeleccionado === 'INACTIVO' ? 'selected' : '' }}>Inactivo
+                    </option>
+                </select>
+                @error('estado')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+        @endif
 
         <!-- Botón -->
         <div>

@@ -28,22 +28,25 @@
         </div>
 
         <!-- Estado -->
-        <div>
-            <label for="estado" class="block mb-2 font-semibold text-gray-800">
-                Estado
-            </label>
-            @php
-                $estadoSeleccionado = old('estado', $categoria->estado ?? 'ACTIVO');
-            @endphp
-            <select name="estado" id="estado" required
-                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                <option value="ACTIVO" {{ $estadoSeleccionado === 'ACTIVO' ? 'selected' : '' }}>Activo</option>
-                <option value="INACTIVO" {{ $estadoSeleccionado === 'INACTIVO' ? 'selected' : '' }}>Inactivo</option>
-            </select>
-            @error('estado')
-                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
+        @if (isset($categoria))
+            <div>
+                <label for="estado" class="block mb-2 font-semibold text-gray-800">
+                    Estado
+                </label>
+                @php
+                    $estadoSeleccionado = old('estado', $categoria->estado ?? 'ACTIVO');
+                @endphp
+                <select name="estado" id="estado" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    <option value="ACTIVO" {{ $estadoSeleccionado === 'ACTIVO' ? 'selected' : '' }}>Activo</option>
+                    <option value="INACTIVO" {{ $estadoSeleccionado === 'INACTIVO' ? 'selected' : '' }}>Inactivo
+                    </option>
+                </select>
+                @error('estado')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+        @endif
 
         <!-- Botón -->
         <div>

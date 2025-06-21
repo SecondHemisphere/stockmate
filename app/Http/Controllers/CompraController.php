@@ -35,9 +35,8 @@ class CompraController extends Controller
     public function create()
     {
         $productos = Producto::orderBy('nombre')->get();
-        $usuarios = Usuario::orderBy('nombre')->get();
 
-        return view('ventas.create', compact('productos', 'usuarios'));
+        return view('compras.create', compact('productos'));
     }
 
     /**
@@ -47,11 +46,14 @@ class CompraController extends Controller
     {
         $datosValidados = $request->validate([
             'producto_id' => 'required|exists:productos,id',
-            'usuario_id' => 'required|exists:usuarios,id',
             'monto_total' => 'required|numeric|min:0',
             'cantidad' => 'required|integer|min:1',
             'fecha_transaccion' => 'required|date',
         ]);
+
+        $userId = request()->user()->id;
+
+        $datosValidados['usuario_id'] = $userId;
 
         Compra::create($datosValidados);
 

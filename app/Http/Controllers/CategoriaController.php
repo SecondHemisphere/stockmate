@@ -38,7 +38,6 @@ class CategoriaController extends Controller
     {
         $datosValidados = $request->validate([
             'nombre' => 'required|string|min:3|max:50|unique:categorias,nombre',
-            'estado' => 'required|in:ACTIVO,INACTIVO',
         ]);
 
         Categoria::create($datosValidados);
@@ -73,7 +72,7 @@ class CategoriaController extends Controller
         $categoria->update($datosValidados);
 
         return redirect()
-            ->route('categorias.edit', $categoria)
+            ->route('categorias.index')
             ->with('swal', [
                 'icon' => 'success',
                 'title' => '¡Bien hecho!',
@@ -112,7 +111,7 @@ class CategoriaController extends Controller
      */
     public function search(Request $request)
     {
-        $buscar= $request->input('q');
+        $buscar = $request->input('q');
 
         $categorias = Categoria::query()
             ->whereLike('nombre', "%{$buscar}%")

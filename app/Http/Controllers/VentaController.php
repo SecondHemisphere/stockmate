@@ -41,9 +41,8 @@ class VentaController extends Controller
     {
         $clientes = Cliente::orderBy('nombre')->get();
         $productos = Producto::orderBy('nombre')->get();
-        $usuarios = Usuario::orderBy('nombre')->get();
 
-        return view('ventas.create', compact('clientes', 'productos', 'usuarios'));
+        return view('ventas.create', compact('clientes', 'productos'));
     }
 
     /**
@@ -75,7 +74,7 @@ class VentaController extends Controller
         try {
             $venta = Venta::create([
                 'cliente_id' => $request->cliente_id,
-                'usuario_id' => $request->usuario_id,
+                'usuario_id' => request()->user()->id,
                 'numero_factura' => $request->numero_factura,
                 'fecha' => $request->fecha,
                 'monto_total' => $request->monto_total,

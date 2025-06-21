@@ -41,7 +41,6 @@ class ProveedorController extends Controller
             'correo' => 'nullable|email|max:255|unique:proveedores,correo',
             'telefono' => 'nullable|string|max:20',
             'direccion' => 'nullable|string',
-            'estado' => 'required|in:ACTIVO,INACTIVO',
         ]);
 
         Proveedor::create($datosValidados);
@@ -79,7 +78,7 @@ class ProveedorController extends Controller
         $proveedor->update($datosValidados);
 
         return redirect()
-            ->route('proveedores.edit', $proveedor)
+            ->route('proveedores.index')
             ->with('swal', [
                 'icon' => 'success',
                 'title' => '¡Proveedor actualizado!',

@@ -41,7 +41,6 @@ class ClienteController extends Controller
             'correo' => 'nullable|email|max:255|unique:clientes,correo',
             'telefono' => 'nullable|string|max:20',
             'direccion' => 'nullable|string',
-            'estado' => 'required|in:ACTIVO,INACTIVO',
         ]);
 
         Cliente::create($datosValidados);
@@ -79,7 +78,7 @@ class ClienteController extends Controller
         $cliente->update($datosValidados);
 
         return redirect()
-            ->route('clientes.edit', $cliente)
+            ->route('clientes.index')
             ->with('swal', [
                 'icon' => 'success',
                 'title' => '¡Cliente actualizado!',
