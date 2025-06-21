@@ -89,7 +89,7 @@ class RolController extends Controller
 
     public function destroy(Rol $rol)
     {
-        if ($rol->nombre === 'Administrador') {
+        if ($rol->id === 1) {
             return redirect()->route('roles.index')->with('swal', [
                 'icon' => 'warning',
                 'title' => 'Acción no permitida',

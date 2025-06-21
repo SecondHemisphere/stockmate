@@ -8,7 +8,7 @@
     </div>
 
     <x-busqueda-con-boton :ruta="route('roles.index')" :ruta_crear="route('roles.create')" :valor="request('search', '')"
-        placeholder="Buscar por nombre del rol..." texto_boton="Buscar" texto_crear="Nuevo Rol" />
+        placeholder="Buscar por nombre ..." texto_boton="Buscar" texto_crear="Nuevo Rol" />
 
     <div class="overflow-x-auto mt-6">
         <table class="table-auto w-full border-collapse border border-gray-300">
@@ -43,7 +43,7 @@
                         </td>
 
                         <td class="border border-gray-300 px-4 py-2 text-center space-x-2">
-                            @if ($rol->nombre !== 'Administrador')
+                            @if ($rol->id !== 1)
                                 <a href="{{ route('roles.edit', $rol->id) }}"
                                     class="inline-block bg-teal-500 text-white px-3 py-1 rounded hover:bg-teal-600 transition">
                                     Editar

@@ -23,8 +23,7 @@
 
                         @switch($tipo)
                             @case('estado')
-                                <span
-                                    class="inline-block px-2 py-1 rounded text-white {{ $valor === 'ACTIVO' ? 'bg-teal-500' : 'bg-red-500' }}">
+                                <span class="{{ $valor === 'ACTIVO' ? 'text-teal-600' : 'text-red-600' }}">
                                     {{ ucfirst(strtolower($valor)) }}
                                 </span>
                             @break

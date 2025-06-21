@@ -104,6 +104,16 @@ class UsuarioController extends Controller
      */
     public function destroy(Usuario $usuario)
     {
+        if ($usuario->id === 1) {
+            return redirect()
+                ->route('usuarios.index')
+                ->with('swal', [
+                    'icon' => 'error',
+                    'title' => 'Acción no permitida',
+                    'text' => 'No puedes eliminar al usuario Administrador.',
+                ]);
+        }
+
         try {
             $usuario->delete();
 

@@ -9,15 +9,15 @@
     'texto_crear' => 'Crear nuevo',
 ])
 
+@php
+    $placeholderWidth = strlen($placeholder) * 8 + 30;
+@endphp
+
 <div class="mb-4 flex justify-between items-center">
     <form action="{{ $ruta }}" method="GET" class="flex items-center space-x-3">
-        <input
-            type="text"
-            name="search"
-            placeholder="{{ $placeholder }}"
-            value="{{ $valor }}"
-            class="border rounded px-3 py-2"
-        >
+        <input type="text" name="search" placeholder="{{ $placeholder }}" value="{{ $valor }}"
+            class="border rounded px-3 py-2" style="width: {{ $placeholderWidth }}px;">
+
         <button type="submit" class="btn btn-neutral text-s px-4 py-2 rounded-lg">
             {{ $texto_boton }}
         </button>
