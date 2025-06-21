@@ -35,8 +35,8 @@ class ProductoController extends Controller
     public function store(Request $request)
     {
         $datosValidados = $request->validate([
-            'categoria_id' => 'nullable|exists:categorias,id',
-            'proveedor_id' => 'nullable|exists:proveedores,id',
+            'categoria_id' => 'required|exists:categorias,id',
+            'proveedor_id' => 'required|exists:proveedores,id',
             'nombre' => 'required|string|max:100|unique:productos,nombre',
             'descripcion' => 'required|string',
             'precio_compra' => 'required|numeric|min:0',
@@ -72,8 +72,8 @@ class ProductoController extends Controller
     public function update(Request $request, Producto $producto)
     {
         $datosValidados = $request->validate([
-            'categoria_id' => 'nullable|exists:categorias,id',
-            'proveedor_id' => 'nullable|exists:proveedores,id',
+            'categoria_id' => 'required|exists:categorias,id',
+            'proveedor_id' => 'required|exists:proveedores,id',
             'nombre' => 'required|string|max:100|unique:productos,nombre,' . $producto->id,
             'descripcion' => 'required|string',
             'precio_compra' => 'required|numeric|min:0',
@@ -125,19 +125,6 @@ class ProductoController extends Controller
         }
     }
 
-/*     public function search(Request $request)
-    {
-        $buscar = $request->input('q', '');
-
-        $resultados = Producto::where('nombre', 'like', "%{$buscar}%")
-            ->orderBy('nombre')
-            ->select('id', 'nombre as text')
-            ->limit(10)
-            ->get();
-
-        return response()->json(['items' => $resultados]);
-    }
- */
     public function search(Request $request)
     {
         $query = $request->input('q');
