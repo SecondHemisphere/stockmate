@@ -41,8 +41,10 @@ class VentaController extends Controller
     {
         $clientes = Cliente::orderBy('nombre')->get();
         $productos = Producto::orderBy('nombre')->get();
+        $metodosPago = Venta::METODOS_PAGO;
+        $numeroFactura = Venta::generarNumeroFactura();
 
-        return view('ventas.create', compact('clientes', 'productos'));
+        return view('ventas.create', compact('clientes', 'productos', 'metodosPago', 'numeroFactura'));
     }
 
     /**
@@ -52,8 +54,6 @@ class VentaController extends Controller
     {
         $request->validate([
             'cliente_id' => 'required|exists:clientes,id',
-            'usuario_id' => 'required|exists:usuarios,id',
-            'numero_factura' => 'required|string|unique:ventas,numero_factura',
             'fecha' => 'required|date',
             'monto_total' => 'required|numeric|min:0',
             'monto_descuento' => 'nullable|numeric|min:0',
@@ -75,7 +75,7 @@ class VentaController extends Controller
             $venta = Venta::create([
                 'cliente_id' => $request->cliente_id,
                 'usuario_id' => request()->user()->id,
-                'numero_factura' => $request->numero_factura,
+                'numero_factura' => Venta::generarNumeroFactura(),
                 'fecha' => $request->fecha,
                 'monto_total' => $request->monto_total,
                 'monto_descuento' => $request->monto_descuento ?? 0,

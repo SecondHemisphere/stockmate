@@ -33,6 +33,27 @@ class Venta extends Model
         'observaciones' => 'string',
     ];
 
+    public const METODOS_PAGO = [
+        'EFECTIVO' => 'Efectivo',
+        'TARJETA_CREDITO' => 'Tarjeta de Crédito',
+        'TARJETA_DEBITO' => 'Tarjeta de Débito',
+        'TRANSFERENCIA' => 'Transferencia',
+        'OTRO' => 'Otro',
+    ];
+
+    public static function generarNumeroFactura(): string
+    {
+        $ultimaVenta = self::latest('id')->first();
+
+        if (!$ultimaVenta || !preg_match('/FAC-(\d+)/', $ultimaVenta->numero_factura, $coincidencias)) {
+            $numero = 1;
+        } else {
+            $numero = intval($coincidencias[1]) + 1;
+        }
+
+        return 'FAC-' . str_pad($numero, 4, '0', STR_PAD_LEFT);
+    }
+
     // Relación con Cliente
     public function cliente()
     {

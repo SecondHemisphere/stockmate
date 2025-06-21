@@ -11,6 +11,7 @@
             Crear
         </flux:breadcrumbs.item>
     </flux:breadcrumbs>
-
-    <x-form-venta :action="route('ventas.store')" :clientes="$clientes" :productos="$productos" method="POST" titulo="Crear Venta" />
+    
+    <x-form-venta :action="route('ventas.store')" :clientes="$clientes" :productos="$productos" :metodosPago="$metodosPago" :numeroFactura="$numeroFactura"
+        method="POST" titulo="Crear Venta" />
 </x-layouts.app>
