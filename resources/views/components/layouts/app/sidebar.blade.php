@@ -270,6 +270,11 @@
             background-color: #e0f7fa;
             flex-grow: 1;
         }
+
+        .parent-container {
+            display: flex;
+            width: 100vw;
+        }
     </style>
 </head>
 

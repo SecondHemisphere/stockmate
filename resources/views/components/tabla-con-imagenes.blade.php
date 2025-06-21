@@ -65,23 +65,25 @@
                 @endforeach
 
                 @if (!collect($columnas)->pluck('campo')->contains('acciones'))
-                    <td class="border border-gray-300 px-4 py-2 text-center space-x-2">
-                        @if ($mostrarEditar)
-                            <a href="{{ url($rutaBase . '/' . $fila->id . '/edit') }}"
-                                class="inline-block bg-teal-500 text-white px-3 py-1 rounded hover:bg-teal-600 transition">
-                                Editar
-                            </a>
-                        @endif
+                    <td class="border border-gray-300 px-4 py-2 text-center">
+                        <div class="flex justify-center items-center gap-2 flex-wrap">
+                            @if ($mostrarEditar)
+                                <a href="{{ url($rutaBase . '/' . $fila->id . '/edit') }}"
+                                    class="inline-block bg-teal-500 text-white px-3 py-1 rounded hover:bg-teal-600 transition">
+                                    Editar
+                                </a>
+                            @endif
 
-                        <form id="delete-form" action="{{ url($rutaBase . '/' . $fila->id) }}" method="POST"
-                            style="display:inline-block;" class="delete-form">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button"
-                                class="btn-eliminar inline-block bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 transition">
-                                Eliminar
-                            </button>
-                        </form>
+                            <form id="delete-form" action="{{ url($rutaBase . '/' . $fila->id) }}" method="POST"
+                                style="display:inline-block;" class="delete-form">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button"
+                                    class="btn-eliminar inline-block bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 transition">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 @endif
             </tr>

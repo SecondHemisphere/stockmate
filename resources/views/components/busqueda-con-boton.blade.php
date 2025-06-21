@@ -26,4 +26,5 @@
     <a href="{{ $ruta_crear }}" class="btn-primary text-s px-6 py-2 rounded-lg font-bold">
         {{ $texto_crear }}
     </a>
+
 </div>

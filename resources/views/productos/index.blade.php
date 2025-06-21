@@ -22,6 +22,7 @@
             ['campo' => 'precio_compra', 'titulo' => 'Precio Compra', 'tipo' => 'moneda'],
             ['campo' => 'precio_venta', 'titulo' => 'Precio Venta', 'tipo' => 'moneda'],
             ['campo' => 'estado', 'titulo' => 'Estado', 'tipo' => 'estado'],
+            ['campo' => 'descripcion', 'titulo' => 'Descripcion'],
         ];
     @endphp
 

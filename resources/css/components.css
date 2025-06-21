@@ -154,11 +154,11 @@
 }
 
 .table-container {
-    @apply relative overflow-x-auto bg-[#f9f8f6] p-6 rounded-lg border border-[#e5d3b3];
+    @apply relative overflow-x-auto bg-[#f9f8f6] p-20 rounded-lg border border-[#e5d3b3] w-full max-w-4xl;
 }
 
 table {
-    @apply w-full text-sm text-left rtl:text-right text-black;
+    @apply w-full overflow-x-auto text-sm text-left rtl:text-right text-black;
 }
 
 thead {

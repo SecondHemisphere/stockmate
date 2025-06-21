@@ -1,11 +1,16 @@
-{{-- resources/views/components/tabla-generica.blade.php --}}
 @props(['columnas', 'filas', 'rutaBase', 'mostrarEditar' => true])
 
-<table class="table-auto w-full border-collapse border border-gray-300">
+<table class="overflow-x-auto">
     <thead>
         <tr>
             @foreach ($columnas as $col)
-                <th class="border border-gray-300 px-4 py-2 text-left">{{ $col['titulo'] }}</th>
+                @php
+                    $titulo = (string) ($col['titulo'] ?? '');
+                    $tituloLimite = \Illuminate\Support\Str::limit($titulo, 25);
+                @endphp
+                <th class="border border-gray-300 px-4 py-2 text-left max-w-xs truncate" title="{{ $titulo }}">
+                    {{ $tituloLimite }}
+                </th>
             @endforeach
             <th class="border border-gray-300 px-4 py-2 text-center">Acciones</th>
         </tr>
@@ -14,31 +19,24 @@
         @forelse ($filas as $fila)
             <tr>
                 @foreach ($columnas as $col)
-                    <td class="border border-gray-300 px-4 py-2">
-                        @php
-                            $campo = $col['campo'];
-                            $tipo = $col['tipo'] ?? 'texto';
-                            $valor = $fila->{$campo} ?? '';
-                        @endphp
+                    @php
+                        $campo = $col['campo'];
+                        $tipo = $col['tipo'] ?? 'texto';
+                        $valor = $fila->{$campo} ?? '';
+                        $texto = (string) $valor;
+                        $textoLimite = \Illuminate\Support\Str::limit($texto, 50);
+                    @endphp
 
+                    <td class="border border-gray-300 px-4 py-2 max-w-xs truncate" title="{{ $texto }}">
                         @switch($tipo)
                             @case('estado')
-                                <span class="{{ $valor === 'ACTIVO' ? 'text-teal-600' : 'text-red-600' }}">
-                                    {{ ucfirst(strtolower($valor)) }}
+                                <span class="{{ $texto === 'ACTIVO' ? 'text-teal-600' : 'text-red-600' }}">
+                                    {{ ucfirst(strtolower($texto)) }}
                                 </span>
                             @break
 
                             @case('fecha')
-                                {{ $valor ? \Carbon\Carbon::parse($valor)->format('d/m/Y') : '-' }}
-                            @break
-
-                            @case('imagen')
-                                @if ($valor)
-                                    <img src="{{ asset('uploads/' . $valor) }}" alt="{{ $fila->nombre ?? '' }}"
-                                        class="h-12 w-auto rounded">
-                                @else
-                                    <span class="text-gray-400 italic">Sin imagen</span>
-                                @endif
+                                {{ $texto ? \Carbon\Carbon::parse($texto)->format('d/m/Y') : '-' }}
                             @break
 
                             @case('moneda')
@@ -46,36 +44,30 @@
                             @break
 
                             @default
-                                @if ($campo === 'direccion')
-                                    @php
-                                        $textoCompleto = $valor;
-                                        $textoCorto = \Illuminate\Support\Str::limit($textoCompleto, 30);
-                                    @endphp
-                                    <span title="{{ $textoCompleto }}">{{ $textoCorto }}</span>
-                                @else
-                                    {{ $valor }}
-                                @endif
+                                {{ $textoLimite }}
                         @endswitch
                     </td>
                 @endforeach
 
-                <td class="border border-gray-300 px-4 py-2 text-center space-x-2">
-                    @if ($mostrarEditar)
-                        <a href="{{ url($rutaBase . '/' . $fila->id . '/edit') }}"
-                            class="inline-block bg-teal-500 text-white px-3 py-1 rounded hover:bg-teal-600 transition">
-                            Editar
-                        </a>
-                    @endif
+                <td class="border border-gray-300 px-4 py-2 text-center">
+                    <div class="flex justify-center items-center gap-2 flex-wrap">
+                        @if ($mostrarEditar)
+                            <a href="{{ url($rutaBase . '/' . $fila->id . '/edit') }}"
+                                class="inline-block bg-teal-500 text-white px-3 py-1 rounded hover:bg-teal-600 transition">
+                                Editar
+                            </a>
+                        @endif
 
-                    <form id="delete-form" action="{{ url($rutaBase . '/' . $fila->id) }}" method="POST"
-                        style="display:inline-block;" class="delete-form">
-                        @csrf
-                        @method('DELETE')
-                        <button type="button"
-                            class="btn-eliminar inline-block bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 transition">
-                            Eliminar
-                        </button>
-                    </form>
+                        <form id="delete-form" action="{{ url($rutaBase . '/' . $fila->id) }}" method="POST"
+                            style="display:inline-block;" class="delete-form">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button"
+                                class="btn-eliminar inline-block bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 transition">
+                                Eliminar
+                            </button>
+                        </form>
+                    </div>
                 </td>
             </tr>
             @empty
