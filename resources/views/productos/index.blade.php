@@ -29,11 +29,13 @@
 
     <x-paginacion :datos="$productos" />
 
-    <!-- Modal para imagen en grande -->
-    <div id="image-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden"
-        onclick="document.getElementById('image-modal').classList.add('hidden')">
+    <!-- Modal para imagen-->
+    <div id="image-modal"
+        class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 backdrop-blur-sm backdrop-brightness-75 bg-black/30"
+        onclick="closeImageModal()">
         <img id="image-modal-src" src="" alt="Imagen ampliada"
-            class="max-w-[600px] w-full h-auto rounded shadow-lg" />
+            class="w-auto h-auto max-w-[400px] max-h-[60vh] object-contain rounded shadow-lg"
+            onclick="event.stopPropagation()" />
     </div>
 
     @push('js')
@@ -43,13 +45,19 @@
             function openImageModal(src) {
                 const modal = document.getElementById('image-modal');
                 const modalImg = document.getElementById('image-modal-src');
+
                 modalImg.src = src;
-                modal.classList.remove('hidden');
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+            }
+
+            function closeImageModal() {
+                const modal = document.getElementById('image-modal');
+                modal.classList.add('opacity-0', 'pointer-events-none');
             }
 
             document.addEventListener('keydown', function(event) {
                 if (event.key === "Escape") {
-                    document.getElementById('image-modal').classList.add('hidden');
+                    closeImageModal();
                 }
             });
         </script>

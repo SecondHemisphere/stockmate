@@ -35,7 +35,7 @@
                             @case('imagen')
                                 @if ($valor)
                                     <img src="{{ asset('storage/' . $valor) }}" alt="{{ $fila->nombre ?? '' }}"
-                                        class="h-12 w-auto rounded mx-auto cursor-pointer"
+                                        class="h-15 w-auto rounded mx-auto cursor-pointer"
                                         onclick="openImageModal('{{ asset('storage/' . $valor) }}')" />
                                 @else
                                     <span class="text-gray-400 italic">Sin imagen</span>
