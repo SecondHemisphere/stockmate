@@ -73,6 +73,8 @@ Route::middleware(['auth'])->group(function () {
         ->names('compras')
         ->middleware('permission:compras.ver|compras.crear|compras.editar|compras.eliminar');
 
+    Route::get('productos/search', [ProductoController::class, 'search'])->name('productos.search');
+
     // Búsquedas para select2 o ajax, si quieres protegerlas también, agrega permisos:
     Route::get('/api/categorias/search', [CategoriaController::class, 'search'])
         ->name('categorias.search')

@@ -125,7 +125,7 @@ class ProductoController extends Controller
         }
     }
 
-    public function search(Request $request)
+/*     public function search(Request $request)
     {
         $buscar = $request->input('q', '');
 
@@ -136,5 +136,23 @@ class ProductoController extends Controller
             ->get();
 
         return response()->json(['items' => $resultados]);
+    }
+ */
+    public function search(Request $request)
+    {
+        $query = $request->input('q');
+
+        $productos = Producto::where('nombre', 'like', '%' . $query . '%')
+            ->limit(10)
+            ->get(['id', 'nombre']);
+
+        $items = $productos->map(function ($producto) {
+            return [
+                'id' => $producto->id,
+                'text' => $producto->nombre,
+            ];
+        });
+
+        return response()->json(['items' => $items]);
     }
 }
