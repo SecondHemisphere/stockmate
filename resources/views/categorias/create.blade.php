@@ -2,7 +2,7 @@
 
     <flux:breadcrumbs class="mb-4">
         <flux:breadcrumbs.item :href="route('dashboard')">
-            Dashboard
+            Inicio
         </flux:breadcrumbs.item>
         <flux:breadcrumbs.item :href="route('categorias.index')">
             Categorias
