@@ -45,30 +45,36 @@
         </div>
     </form>
 
-    <!-- Botones descarga -->
-    <div class="flex justify-between items-center mb-4">
-        <a href="{{ route('reportes.ventas-filtradas.pdf', request()->query()) }}"
-            class="btn bg-red-600 hover:bg-red-500 text-white px-5 py-2 rounded-lg flex items-center gap-2">
-            <i class="fas fa-file-pdf"></i> Descargar PDF
-        </a>
+    @if (request('fecha_inicio'))
+        <!-- Botones descarga -->
+        <div class="flex justify-between items-center mb-4">
+            <a href="{{ route('reportes.ventas-filtradas.pdf', request()->query()) }}"
+                class="btn bg-red-600 hover:bg-red-500 text-white px-5 py-2 rounded-lg flex items-center gap-2">
+                <i class="fas fa-file-pdf"></i> Descargar PDF
+            </a>
 
-        <a href="{{ route('reportes.ventas-filtradas.excel', request()->query()) }}"
-            class="btn bg-green-600 hover:bg-green-500 text-white px-5 py-2 rounded-lg flex items-center gap-2">
-            <i class="fas fa-file-excel"></i> Descargar Excel
-        </a>
-    </div>
+            <a href="{{ route('reportes.ventas-filtradas.excel', request()->query()) }}"
+                class="btn bg-green-600 hover:bg-green-500 text-white px-5 py-2 rounded-lg flex items-center gap-2">
+                <i class="fas fa-file-excel"></i> Descargar Excel
+            </a>
+        </div>
 
-    <x-tabla-reporte :columnas="[
-        ['campo' => 'fecha', 'titulo' => 'Fecha'],
-        ['campo' => 'numero_factura', 'titulo' => 'Factura'],
-        ['campo' => 'cliente_nombre', 'titulo' => 'Cliente'],
-        ['campo' => 'usuario_nombre', 'titulo' => 'Usuario'],
-        ['campo' => 'monto_total', 'titulo' => 'Monto Total'],
-        ['campo' => 'metodo_pago', 'titulo' => 'Método de Pago'],
-    ]" :filas="$ventas" :formatear="[
-        'monto_total' => fn($valor) => '$' . number_format($valor, 2),
-        'fecha' => fn($valor) => \Carbon\Carbon::parse($valor)->format('d/m/Y H:i'),
-    ]" />
+        <x-tabla-reporte :columnas="[
+            ['campo' => 'fecha', 'titulo' => 'Fecha'],
+            ['campo' => 'numero_factura', 'titulo' => 'Factura'],
+            ['campo' => 'cliente_nombre', 'titulo' => 'Cliente'],
+            ['campo' => 'usuario_nombre', 'titulo' => 'Usuario'],
+            ['campo' => 'monto_total', 'titulo' => 'Monto Total'],
+            ['campo' => 'metodo_pago', 'titulo' => 'Método de Pago'],
+        ]" :filas="$ventas" :formatear="[
+            'monto_total' => fn($valor) => '$' . number_format($valor, 2),
+            'fecha' => fn($valor) => \Carbon\Carbon::parse($valor)->format('d/m/Y H:i'),
+        ]" />
+    @else
+        <div class="text-center text-gray-500 mt-10">
+            <p>Seleccione al menos una <strong>fecha de inicio</strong> para mostrar el reporte.</p>
+        </div>
+    @endif
 
     <!-- Script para habilitar/deshabilitar Fecha Fin según Fecha Inicio -->
     <script>
