@@ -130,6 +130,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('historial-producto', [ReporteController::class, 'historialProducto'])->name('historial-producto');
         Route::get('historial-producto/pdf', [ReporteController::class, 'historialProductoPdf'])->name('historial-producto.pdf');
         Route::get('historial-producto/excel', [ReporteController::class, 'historialProductoExcel'])->name('historial-producto.excel');
+
+        Route::get('movimientos-inventario', [ReporteController::class, 'movimientosInventario'])->name('movimientos-inventario');
+        Route::get('movimientos-inventario/pdf', [ReporteController::class, 'movimientosInventarioPdf'])->name('movimientos-inventario.pdf');
+        Route::get('movimientos-inventario/excel', [ReporteController::class, 'movimientosInventarioExcel'])->name('movimientos-inventario.excel');
     });
 });
 

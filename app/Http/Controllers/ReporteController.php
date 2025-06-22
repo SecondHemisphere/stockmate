@@ -473,4 +473,104 @@ class ReporteController extends Controller
 
         return (new ExcelExporter($data, $headers, 'historial-producto.xlsx'))->export();
     }
+
+    public function movimientosInventario(Request $request)
+    {
+        $usuarios = DB::table('usuarios')->select('id', 'nombre')->get();
+
+        $query = DB::table('vw_movimientos_inventario')
+            ->orderBy('fecha');
+
+        if ($request->filled('usuario_id')) {
+            $query->where('usuario_id', $request->usuario_id);
+        }
+
+        if ($request->filled('fecha_inicio')) {
+            $query->whereDate('fecha', '>=', $request->fecha_inicio);
+        }
+
+        if ($request->filled('fecha_fin')) {
+            $query->whereDate('fecha', '<=', $request->fecha_fin);
+        }
+
+        $movimientos = $query->get()->map(function ($item) {
+            $item->fecha_formateada = \Carbon\Carbon::parse($item->fecha)->format('d/m/Y H:i');
+            $item->precio_unitario_formateado = '$' . number_format($item->precio_unitario, 2, '.', ',');
+            $item->precio_total_formateado = '$' . number_format($item->precio_total, 2, '.', ',');
+            return $item;
+        });
+
+        return view('reportes.movimientos-inventario', compact('movimientos', 'usuarios'));
+    }
+
+    public function movimientosInventarioPdf(Request $request)
+    {
+        $query = DB::table('vw_movimientos_inventario')
+            ->orderBy('fecha');
+
+        if ($request->filled('usuario_id')) {
+            $query->where('usuario_id', $request->usuario_id);
+        }
+
+        if ($request->filled('fecha_inicio')) {
+            $query->whereDate('fecha', '>=', $request->fecha_inicio);
+        }
+
+        if ($request->filled('fecha_fin')) {
+            $query->whereDate('fecha', '<=', $request->fecha_fin);
+        }
+
+        $movimientos = $query->get();
+
+        $pdf = Pdf::loadView('reportes.movimientos-inventario-pdf', compact('movimientos'));
+
+        return $pdf->download('movimientos-inventario.pdf');
+    }
+
+    public function movimientosInventarioExcel(Request $request)
+    {
+        $query = DB::table('vw_movimientos_inventario')
+            ->orderBy('fecha');
+
+        if ($request->filled('usuario_id')) {
+            $query->where('usuario_id', $request->usuario_id);
+        }
+
+        if ($request->filled('fecha_inicio')) {
+            $query->whereDate('fecha', '>=', $request->fecha_inicio);
+        }
+
+        if ($request->filled('fecha_fin')) {
+            $query->whereDate('fecha', '<=', $request->fecha_fin);
+        }
+
+        $movimientos = $query->get();
+
+        $headers = [
+            'fecha' => 'Fecha',
+            'producto_nombre' => 'Producto',
+            'tipo_movimiento' => 'Tipo',
+            'cantidad' => 'Cantidad',
+            'precio_unitario' => 'Precio Unitario',
+            'precio_total' => 'Precio Total',
+            'relacionado' => 'Proveedor/Cliente',
+            'usuario_nombre' => 'Usuario',
+        ];
+
+        $data = $movimientos->map(function ($item, $key) {
+            return [
+                'index' => $key + 1,
+                'producto_nombre' => $item->producto_nombre,
+                'tipo_movimiento' => $item->tipo_movimiento,
+                'fecha' => \Carbon\Carbon::parse($item->fecha)->format('d/m/Y H:i'),
+                'cantidad' => $item->cantidad,
+                'precio_unitario' => number_format($item->precio_unitario, 2),
+                'precio_total' => number_format($item->precio_total, 2),
+                'relacionado' => $item->relacionado,
+                'usuario_nombre' => $item->usuario_nombre,
+            ];
+        })->toArray();
+
+        return (new ExcelExporter($data, $headers, 'movimientos-inventario.xlsx'))->export();
+    }
 }
