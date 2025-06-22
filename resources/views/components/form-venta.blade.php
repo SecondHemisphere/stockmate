@@ -12,21 +12,21 @@
         <div class="flex flex-wrap gap-6">
             <!-- Cliente -->
             <div class="flex-1 min-w-[220px] relative">
-                <label for="cliente-search" class="block mb-2 font-semibold text-gray-800">Cliente</label>
-                <input type="text" id="cliente-search" name="customer_name" placeholder="Buscar cliente..."
-                    autocomplete="off"
+                <label for="buscar-cliente" class="block mb-2 font-semibold text-gray-800">Cliente *</label>
+                <input type="text" id="buscar-cliente" name="nombre_cliente" placeholder="Buscar cliente..."
+                    autocomplete="off" required
                     class="w-full px-4 py-2 border border-gray-300 rounded-md transition mb-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    value="{{ old('customer_name', '') }}">
-                <select id="cliente-select" name="customer_id" size="5"
+                    value="{{ old('nombre_cliente', '') }}">
+                <select id="select-cliente" name="cliente_id" size="5"
                     class="select-buscable w-full border border-gray-300 rounded-md absolute z-10 bg-white"
                     style="height:auto; display:none;">
-                    @if (old('customer_id'))
-                        <option value="{{ old('customer_id') }}" selected>
+                    @if (old('cliente_id'))
+                        <option value="{{ old('cliente_id') }}" selected>
                             Cliente seleccionado
                         </option>
                     @endif
                 </select>
-                @error('customer_id')
+                @error('cliente_id')
                     <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                 @enderror
             </div>
@@ -40,64 +40,68 @@
 
             <!-- Fecha -->
             <div class="flex-1 min-w-[220px]">
-                <label for="sell_date" class="block mb-2 font-semibold text-gray-800">Fecha</label>
-                <input type="datetime-local" name="sell_date" id="sell_date" required
-                    value="{{ old('sell_date', date('Y-m-d\TH:i')) }}"
+                <label for="fecha" class="block mb-2 font-semibold text-gray-800">Fecha *</label>
+                <input type="datetime-local" name="fecha" id="fecha" required
+                    value="{{ old('fecha', date('Y-m-d\TH:i')) }}"
                     class="w-full px-4 py-2 border border-gray-300 rounded-md transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
             </div>
         </div>
 
         <!-- Productos -->
         <fieldset class="border border-gray-300 rounded-md p-4">
-            <legend class="font-semibold text-gray-800 px-2">Productos</legend>
+            <legend class="font-semibold text-gray-800 px-2">Productos *</legend>
 
             <table class="w-full mt-2">
                 <thead>
                     <tr class="border-b border-gray-300">
                         <th class="text-left pb-2">Producto</th>
                         <th class="text-center pb-2">Cantidad</th>
-                        <th class="text-right pb-2">Precio</th>
+                        <th class="text-center pb-2">Stock</th>
+                        <th class="text-right pb-2">Precio Unitario</th>
                         <th class="text-right pb-2">SubTotal</th>
                         <th class="pb-2"></th>
                     </tr>
                 </thead>
-                <tbody id="product-list">
-                    <tr class="product-item border-b border-gray-200" data-index="0">
+                <tbody id="lista-productos">
+                    <tr class="fila-producto border-b border-gray-200" data-indice="0">
                         <td class="py-3">
                             <div class="relative">
                                 <input type="text"
-                                    class="product-search w-full px-4 py-2 border border-gray-300 rounded-md transition mb-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="Buscar producto..." autocomplete="off" value="">
+                                    class="buscar-producto w-full px-4 py-2 border border-gray-300 rounded-md transition mb-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Buscar producto..." autocomplete="off" required>
                                 <select
-                                    class="product-select select-producto w-full border border-gray-300 rounded-md absolute z-10 bg-white"
-                                    name="products[0][product_id]" size="5"
+                                    class="select-producto w-full border border-gray-300 rounded-md absolute z-10 bg-white"
+                                    name="productos[0][producto_id]" size="5"
                                     style="height:auto; display:none;"></select>
                             </div>
                         </td>
                         <td class="px-2">
-                            <input type="number" name="products[0][sold_quantity]" value="1" min="1"
-                                class="sold-quantity w-full px-2 py-1 border border-gray-300 rounded-md text-center" />
+                            <input type="number" name="productos[0][cantidad]" value="1" min="1" required
+                                class="cantidad w-full px-2 py-1 border border-gray-300 rounded-md text-center" />
+                        </td>
+                        <td class="px-2 text-center">
+                            <span class="stock-disponible text-sm text-gray-600">0</span>
                         </td>
                         <td class="px-2">
-                            <input type="text" name="products[0][sold_price]" value="0.00"
-                                class="price-input w-full px-2 py-1 border border-gray-300 rounded-md text-right"
+                            <input type="text" name="productos[0][precio_unitario]" value="0.00" required
+                                class="precio-unitario w-full px-2 py-1 border border-gray-300 rounded-md text-right"
                                 readonly />
                         </td>
                         <td class="px-2">
-                            <input type="text" name="products[0][total_sold_price]" value="0.00"
-                                class="total-sold-price w-full px-2 py-1 border border-gray-300 rounded-md text-right"
+                            <input type="text" name="productos[0][precio_total]" value="0.00" required
+                                class="precio-total w-full px-2 py-1 border border-gray-300 rounded-md text-right"
                                 readonly />
                         </td>
                         <td class="text-center">
                             <button type="button"
-                                class="remove-product text-red-600 font-bold px-2 hover:text-red-800">X</button>
+                                class="eliminar-producto text-red-600 font-bold px-2 hover:text-red-800">X</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
 
-            <button type="button" id="add-product"
-                class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition">
+            <button type="button" id="agregar-producto"
+                class="mt-4 bg-teal-600 hover:bg-teal-800 text-white font-semibold px-4 py-2 rounded transition">
                 + Agregar producto
             </button>
         </fieldset>
@@ -105,28 +109,28 @@
         <div class="flex flex-wrap gap-6 mt-4">
             <!-- Método de pago -->
             <div class="flex-1 min-w-[220px]">
-                <label for="payment_method" class="block mb-2 font-semibold text-gray-800">Método de Pago</label>
-                <select name="payment_method" id="payment_method" required
+                <label for="metodo_pago" class="block mb-2 font-semibold text-gray-800">Método de Pago *</label>
+                <select name="metodo_pago" id="metodo_pago" required
                     class="w-full px-4 py-2 border border-gray-300 rounded-md transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Seleccionar método de pago</option>
                     @foreach ($metodosPago as $key => $label)
-                        <option value="{{ $key }}" {{ old('payment_method') == $key ? 'selected' : '' }}>
+                        <option value="{{ $key }}" {{ old('metodo_pago') == $key ? 'selected' : '' }}>
                             {{ $label }}
                         </option>
                     @endforeach
                 </select>
-                @error('payment_method')
+                @error('metodo_pago')
                     <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                 @enderror
             </div>
 
             <!-- Observaciones -->
             <div class="flex-1 min-w-[220px]">
-                <label for="details" class="block mb-2 font-semibold text-gray-800">Observaciones</label>
-                <textarea name="details" id="details" rows="3"
+                <label for="observaciones" class="block mb-2 font-semibold text-gray-800">Observaciones</label>
+                <textarea name="observaciones" id="observaciones" rows="3"
                     class="w-full px-4 py-2 border border-gray-300 rounded-md transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Detalles adicionales...">{{ old('details') }}</textarea>
-                @error('details')
+                    placeholder="Detalles adicionales...">{{ old('observaciones') }}</textarea>
+                @error('observaciones')
                     <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                 @enderror
             </div>
@@ -137,24 +141,24 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="text-right">
                     <p class="font-semibold">Subtotal:</p>
-                    <input type="text" id="subtotal_amount" value="0.00"
+                    <input type="text" id="subtotal" value="0.00"
                         class="w-full px-2 py-1 border border-gray-300 rounded-md text-right bg-white" readonly>
                 </div>
                 <div class="text-right">
                     <p class="font-semibold">Descuento:</p>
-                    <input type="number" id="discount" name="discount_amount"
-                        value="{{ old('discount_amount', 0) }}" min="0" step="0.01"
+                    <input type="number" id="descuento" name="monto_descuento"
+                        value="{{ old('monto_descuento', 0) }}" min="0" step="0.01"
                         class="w-full px-2 py-1 border border-gray-300 rounded-md text-right">
                 </div>
                 <div class="text-right">
                     <p class="font-semibold">IVA (15%):</p>
-                    <input type="text" id="iva_amount" value="0.00"
+                    <input type="text" id="iva" value="0.00"
                         class="w-full px-2 py-1 border border-gray-300 rounded-md text-right bg-white" readonly>
                 </div>
                 <div class="text-right">
                     <p class="font-semibold">Total:</p>
-                    <input type="text" id="total_with_iva" name="total_with_iva"
-                        value="{{ old('total_with_iva', 0.0) }}"
+                    <input type="text" id="total" name="total_con_iva"
+                        value="{{ old('total_con_iva', 0.0) }}"
                         class="w-full px-2 py-1 border border-gray-300 rounded-md text-right bg-white font-bold"
                         readonly>
                 </div>
@@ -163,7 +167,7 @@
 
         <div class="flex justify-end mt-6">
             <button type="submit"
-                class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md transition">
+                class="px-6 py-2 bg-teal-600 hover:bg-teal-800 text-white font-semibold rounded-md transition">
                 Guardar Factura
             </button>
         </div>
@@ -172,24 +176,27 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        let productIndex = 1;
+        let indiceProducto = 1;
 
-        function initClientSearch() {
-            const searchInput = document.getElementById('cliente-search');
-            const selectElement = document.getElementById('cliente-select');
-            if (!searchInput || !selectElement) return;
+        // --------------------- CLIENTES ---------------------
+        function inicializarBusquedaCliente() {
+            const buscarInput = document.getElementById('buscar-cliente');
+            const selectElement = document.getElementById('select-cliente');
 
-            function showSelect(show) {
-                selectElement.style.display = show ? 'block' : 'none';
+            if (!buscarInput || !selectElement) return;
+
+            function mostrarSelect(mostrar) {
+                selectElement.style.display = mostrar ? 'block' : 'none';
             }
 
-            function loadItems(query) {
-                if (!query) {
+            function cargarClientes(consulta) {
+                if (!consulta) {
                     selectElement.innerHTML = '';
-                    showSelect(false);
+                    mostrarSelect(false);
                     return;
                 }
-                fetch('{{ route('clientes.search') }}?q=' + encodeURIComponent(query))
+
+                fetch('{{ route('clientes.search') }}?q=' + encodeURIComponent(consulta))
                     .then(res => res.json())
                     .then(data => {
                         selectElement.innerHTML = '';
@@ -201,13 +208,13 @@
                                 selectElement.appendChild(option);
                             });
                             selectElement.selectedIndex = 0;
-                            showSelect(true);
+                            mostrarSelect(true);
                         } else {
                             const option = document.createElement('option');
                             option.disabled = true;
                             option.textContent = 'No se encontraron resultados';
                             selectElement.appendChild(option);
-                            showSelect(true);
+                            mostrarSelect(true);
                         }
                     }).catch(() => {
                         selectElement.innerHTML = '';
@@ -215,48 +222,54 @@
                         option.disabled = true;
                         option.textContent = 'Error al cargar datos';
                         selectElement.appendChild(option);
-                        showSelect(true);
+                        mostrarSelect(true);
                     });
             }
 
-            function itemSelected() {
-                const selectedOption = selectElement.options[selectElement.selectedIndex];
-                if (selectedOption && !selectedOption.disabled) {
-                    searchInput.value = selectedOption.textContent;
-                    showSelect(false);
-                    // Aquí puedes guardar el id en un input oculto si quieres
+            function clienteSeleccionado() {
+                const opcion = selectElement.options[selectElement.selectedIndex];
+                if (opcion && !opcion.disabled) {
+                    buscarInput.value = opcion.textContent;
+                    mostrarSelect(false);
                 }
             }
 
-            searchInput.addEventListener('input', () => loadItems(searchInput.value.trim()));
-            selectElement.addEventListener('change', itemSelected);
+            buscarInput.addEventListener('input', () => cargarClientes(buscarInput.value.trim()));
+            selectElement.addEventListener('change', clienteSeleccionado);
             selectElement.addEventListener('click', e => {
-                if (e.target.tagName === 'OPTION') itemSelected();
+                if (e.target.tagName === 'OPTION') clienteSeleccionado();
             });
 
             document.addEventListener('click', e => {
-                if (!selectElement.contains(e.target)) showSelect(false);
+                if (!selectElement.contains(e.target) && e.target !== buscarInput) {
+                    mostrarSelect(false);
+                }
             });
 
-            if (searchInput.value) loadItems(searchInput.value);
+            if (buscarInput.value) cargarClientes(buscarInput.value);
         }
 
-        function initProductSearch(row) {
-            const searchInput = row.querySelector('.product-search');
-            const selectElement = row.querySelector('.product-select');
-            if (!searchInput || !selectElement) return;
+        // --------------------- PRODUCTOS ---------------------
+        function inicializarBusquedaProducto(fila) {
+            const buscarInput = fila.querySelector('.buscar-producto');
+            const selectElement = fila.querySelector('.select-producto');
+            const stockSpan = fila.querySelector('.stock-disponible');
+            const precioInput = fila.querySelector('.precio-unitario');
+            const cantidadInput = fila.querySelector('.cantidad');
+            const totalInput = fila.querySelector('.precio-total');
 
-            function showSelect(show) {
-                selectElement.style.display = show ? 'block' : 'none';
+            function mostrarSelect(mostrar) {
+                selectElement.style.display = mostrar ? 'block' : 'none';
             }
 
-            function loadItems(query) {
-                if (!query) {
+            function cargarProductos(consulta) {
+                if (!consulta) {
                     selectElement.innerHTML = '';
-                    showSelect(false);
+                    mostrarSelect(false);
                     return;
                 }
-                fetch('{{ route('productos.search') }}?q=' + encodeURIComponent(query))
+
+                fetch('{{ route('productos.searchVentas') }}?q=' + encodeURIComponent(consulta))
                     .then(res => res.json())
                     .then(data => {
                         selectElement.innerHTML = '';
@@ -265,17 +278,18 @@
                                 const option = document.createElement('option');
                                 option.value = item.id;
                                 option.textContent = item.text;
-                                option.dataset.price = item.sold_price || 0;
+                                option.dataset.precio = item.precio_venta || 0;
+                                option.dataset.stock = item.stock || 0;
                                 selectElement.appendChild(option);
                             });
                             selectElement.selectedIndex = 0;
-                            showSelect(true);
+                            mostrarSelect(true);
                         } else {
                             const option = document.createElement('option');
                             option.disabled = true;
                             option.textContent = 'No se encontraron resultados';
                             selectElement.appendChild(option);
-                            showSelect(true);
+                            mostrarSelect(true);
                         }
                     }).catch(() => {
                         selectElement.innerHTML = '';
@@ -283,162 +297,147 @@
                         option.disabled = true;
                         option.textContent = 'Error al cargar datos';
                         selectElement.appendChild(option);
-                        showSelect(true);
+                        mostrarSelect(true);
                     });
             }
 
-            function itemSelected() {
-                const selectedOption = selectElement.options[selectElement.selectedIndex];
-                if (selectedOption && !selectedOption.disabled) {
-                    searchInput.value = selectedOption.textContent;
-                    showSelect(false);
-                    const priceInput = row.querySelector('.price-input');
-                    const price = parseFloat(selectedOption.dataset.price || 0);
-                    priceInput.value = price.toFixed(2);
-                    updateRowTotal(row);
+            function productoSeleccionado() {
+                const opcion = selectElement.options[selectElement.selectedIndex];
+                if (opcion && !opcion.disabled) {
+                    buscarInput.value = opcion.textContent;
+                    mostrarSelect(false);
+
+                    const precio = parseFloat(opcion.dataset.precio) || 0;
+                    const stock = parseInt(opcion.dataset.stock) || 0;
+                    let cantidad = parseInt(cantidadInput.value) || 1;
+
+                    // Límite de stock
+                    cantidadInput.max = stock;
+                    if (cantidad > stock) {
+                        cantidad = stock;
+                        cantidadInput.value = cantidad;
+                    } else if (cantidad < 1) {
+                        cantidad = 1;
+                        cantidadInput.value = cantidad;
+                    }
+
+                    // Actualizar campos
+                    precioInput.value = precio.toFixed(2);
+                    stockSpan.textContent = stock;
+                    totalInput.value = (cantidad * precio).toFixed(2);
+
+                    selectElement.name = `productos[${fila.dataset.indice}][producto_id]`;
+
+                    actualizarTotales();
                 }
             }
 
-            searchInput.addEventListener('input', () => loadItems(searchInput.value.trim()));
-            selectElement.addEventListener('change', itemSelected);
+            buscarInput.addEventListener('input', () => cargarProductos(buscarInput.value.trim()));
+            selectElement.addEventListener('change', productoSeleccionado);
             selectElement.addEventListener('click', e => {
-                if (e.target.tagName === 'OPTION') itemSelected();
+                if (e.target.tagName === 'OPTION') productoSeleccionado();
             });
 
             document.addEventListener('click', e => {
-                if (!selectElement.contains(e.target)) showSelect(false);
+                if (!selectElement.contains(e.target) && e.target !== buscarInput) {
+                    mostrarSelect(false);
+                }
             });
 
-            if (searchInput.value) loadItems(searchInput.value);
+            cantidadInput.addEventListener('input', function() {
+                let cantidad = parseInt(this.value) || 1;
+                const precio = parseFloat(precioInput.value) || 0;
+                const stock = parseInt(stockSpan.textContent) || 0;
+
+                if (cantidad > stock) this.value = stock;
+                if (cantidad < 1) this.value = 1;
+
+                totalInput.value = (parseInt(this.value) * precio).toFixed(2);
+                actualizarTotales();
+            });
+
+            if (buscarInput.value) cargarProductos(buscarInput.value);
         }
 
-        function updateRowTotal(row) {
-            const quantityInput = row.querySelector('.sold-quantity');
-            const priceInput = row.querySelector('.price-input');
-            const totalInput = row.querySelector('.total-sold-price');
-
-            const quantity = parseFloat(quantityInput.value) || 0;
-            const price = parseFloat(priceInput.value) || 0;
-            const total = quantity * price;
-
-            totalInput.value = total.toFixed(2);
-            updateTotals();
-        }
-
-        function updateTotals() {
+        // --------------------- TOTALES ---------------------
+        function actualizarTotales() {
             let subtotal = 0;
-            document.querySelectorAll('.total-sold-price').forEach(input => {
+            document.querySelectorAll('.precio-total').forEach(input => {
                 subtotal += parseFloat(input.value) || 0;
             });
 
-            const discount = parseFloat(document.getElementById('discount').value) || 0;
-            const iva = (subtotal - discount) * 0.15;
-            const total = subtotal - discount + iva;
+            const descuento = parseFloat(document.getElementById('descuento').value) || 0;
+            const iva = (subtotal - descuento) * 0.15;
+            const total = subtotal - descuento + iva;
 
-            document.getElementById('subtotal_amount').value = subtotal.toFixed(2);
-            document.getElementById('iva_amount').value = iva.toFixed(2);
-            document.getElementById('total_with_iva').value = total.toFixed(2);
+            document.getElementById('subtotal').value = subtotal.toFixed(2);
+            document.getElementById('iva').value = iva.toFixed(2);
+            document.getElementById('total').value = total.toFixed(2);
+            document.querySelector('input[name="total_con_iva"]').value = total.toFixed(2);
         }
 
-        initClientSearch();
+        // --------------------- INICIALIZAR ---------------------
+        inicializarBusquedaCliente();
 
-        const firstRow = document.querySelector('.product-item');
-        if (firstRow) initProductSearch(firstRow);
+        const primeraFila = document.querySelector('.fila-producto');
+        if (primeraFila) {
+            inicializarBusquedaProducto(primeraFila);
+        }
 
-        document.getElementById('add-product').addEventListener('click', function() {
-            const productList = document.getElementById('product-list');
-            const newRow = document.createElement('tr');
-            newRow.classList.add('product-item', 'border-b', 'border-gray-200');
-            newRow.dataset.index = productIndex;
+        // --------------------- AGREGAR FILA ---------------------
+        document.getElementById('agregar-producto').addEventListener('click', function() {
+            const lista = document.getElementById('lista-productos');
+            const fila = document.createElement('tr');
+            fila.classList.add('fila-producto', 'border-b', 'border-gray-200');
+            fila.dataset.indice = indiceProducto;
 
-            newRow.innerHTML = `
+            fila.innerHTML = `
             <td class="py-3">
                 <div class="relative">
-                    <input type="text"
-                        class="product-search w-full px-4 py-2 border border-gray-300 rounded-md transition mb-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Buscar producto..." autocomplete="off" value="">
-                    <select
-                        class="product-select select-producto w-full border border-gray-300 rounded-md absolute z-10 bg-white"
-                        name="products[${productIndex}][product_id]" size="5" style="height:auto; display:none;"></select>
+                    <input type="text" class="buscar-producto w-full px-4 py-2 border border-gray-300 rounded-md transition mb-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Buscar producto..." autocomplete="off" required>
+                    <select class="select-producto w-full border border-gray-300 rounded-md absolute z-10 bg-white" name="productos[${indiceProducto}][producto_id]" size="5" style="height:auto; display:none;"></select>
                 </div>
             </td>
             <td class="px-2">
-                <input type="number" name="products[${productIndex}][sold_quantity]" value="1" min="1"
-                    class="sold-quantity w-full px-2 py-1 border border-gray-300 rounded-md text-center" />
+                <input type="number" name="productos[${indiceProducto}][cantidad]" value="1" min="1" required class="cantidad w-full px-2 py-1 border border-gray-300 rounded-md text-center" />
+            </td>
+            <td class="px-2 text-center">
+                <span class="stock-disponible text-sm text-gray-600">0</span>
             </td>
             <td class="px-2">
-                <input type="text" name="products[${productIndex}][sold_price]" value="0.00"
-                    class="price-input w-full px-2 py-1 border border-gray-300 rounded-md text-right" readonly />
+                <input type="text" name="productos[${indiceProducto}][precio_unitario]" value="0.00" required class="precio-unitario w-full px-2 py-1 border border-gray-300 rounded-md text-right" readonly />
             </td>
             <td class="px-2">
-                <input type="text" name="products[${productIndex}][total_sold_price]" value="0.00"
-                    class="total-sold-price w-full px-2 py-1 border border-gray-300 rounded-md text-right" readonly />
+                <input type="text" name="productos[${indiceProducto}][precio_total]" value="0.00" required class="precio-total w-full px-2 py-1 border border-gray-300 rounded-md text-right" readonly />
             </td>
             <td class="text-center">
-                <button type="button"
-                    class="remove-product text-red-600 font-bold px-2 hover:text-red-800">X</button>
+                <button type="button" class="eliminar-producto text-red-600 font-bold px-2 hover:text-red-800">X</button>
             </td>
         `;
 
-            productList.appendChild(newRow);
+            lista.appendChild(fila);
+            inicializarBusquedaProducto(fila);
 
-            initProductSearch(newRow);
-
-            const quantityInput = newRow.querySelector('.sold-quantity');
-            quantityInput.addEventListener('input', () => updateRowTotal(newRow));
-
-            const removeBtn = newRow.querySelector('.remove-product');
-            removeBtn.addEventListener('click', () => {
-                newRow.remove();
-                updateTotals();
+            fila.querySelector('.eliminar-producto').addEventListener('click', () => {
+                fila.remove();
+                actualizarTotales();
             });
 
-            productIndex++;
+            indiceProducto++;
         });
 
-        document.getElementById('product-list').addEventListener('input', function(e) {
-            if (e.target.classList.contains('sold-quantity')) {
-                updateRowTotal(e.target.closest('.product-item'));
+        // --------------------- ELIMINAR FILA ---------------------
+        document.getElementById('lista-productos').addEventListener('click', function(e) {
+            if (e.target.classList.contains('eliminar-producto')) {
+                e.target.closest('.fila-producto').remove();
+                actualizarTotales();
             }
         });
 
-        document.getElementById('product-list').addEventListener('click', function(e) {
-            if (e.target.classList.contains('remove-product')) {
-                e.target.closest('.product-item').remove();
-                updateTotals();
-            }
-        });
+        // --------------------- DESCUENTO ---------------------
+        document.getElementById('descuento').addEventListener('input', actualizarTotales);
 
-        document.getElementById('discount').addEventListener('input', updateTotals);
-
-        updateTotals();
+        // --------------------- INICIO ---------------------
+        actualizarTotales();
     });
 </script>
-
-<style>
-    .select-producto {
-        width: 100%;
-        border-radius: 0.375rem;
-        font-size: 0.875rem;
-        background-color: white;
-        padding: 0 !important;
-        box-sizing: border-box;
-        max-height: calc(1.5em * 5 + 0.5em);
-        overflow-y: auto;
-        overflow-x: hidden;
-        white-space: nowrap;
-    }
-
-    .select-producto option {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.9rem;
-        cursor: pointer;
-        border: none;
-    }
-
-    .select-producto option:disabled {
-        cursor: default;
-        font-style: italic;
-        background-color: transparent !important;
-    }
-</style>

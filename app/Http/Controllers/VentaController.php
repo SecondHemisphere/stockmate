@@ -12,18 +12,18 @@ use Illuminate\Support\Facades\DB;
 class VentaController extends Controller
 {
     /**
-     * Mostrar listado de ventas con paginación y búsqueda por cliente o número factura.
+     * Mostrar listado de ventas con paginación y búsqueda por cliente o número de factura.
      */
     public function index(Request $request)
     {
         $query = Venta::with(['cliente', 'usuario']);
 
-        if ($search = $request->input('search')) {
-            $query->where(function ($q) use ($search) {
-                $q->whereHas('cliente', function ($qc) use ($search) {
-                    $qc->where('nombre', 'like', "%{$search}%");
+        if ($busqueda = $request->input('search')) {
+            $query->where(function ($q) use ($busqueda) {
+                $q->whereHas('cliente', function ($qc) use ($busqueda) {
+                    $qc->where('nombre', 'like', "%{$busqueda}%");
                 })
-                    ->orWhere('numero_factura', 'like', "%{$search}%");
+                    ->orWhere('numero_factura', 'like', "%{$busqueda}%");
             });
         }
 
@@ -52,21 +52,23 @@ class VentaController extends Controller
      */
     public function store(Request $request)
     {
+        $userId = request()->user()->id;
+
         $request->validate([
             'cliente_id' => 'required|exists:clientes,id',
             'fecha' => 'required|date',
-            'monto_total' => 'required|numeric|min:0',
-            'monto_descuento' => 'nullable|numeric|min:0',
             'total_con_iva' => 'required|numeric|min:0',
+            'monto_descuento' => 'nullable|numeric|min:0',
             'metodo_pago' => 'required|in:EFECTIVO,TARJETA_CREDITO,TARJETA_DEBITO,TRANSFERENCIA,OTRO',
             'observaciones' => 'nullable|string',
+            'numero_factura' => 'required|unique:ventas,numero_factura',
 
             // Validar detalles
-            'detalles' => 'required|array|min:1',
-            'detalles.*.producto_id' => 'required|exists:productos,id',
-            'detalles.*.cantidad' => 'required|integer|min:1',
-            'detalles.*.precio_unitario' => 'required|numeric|min:0',
-            'detalles.*.precio_total' => 'required|numeric|min:0',
+            'productos' => 'required|array|min:1',
+            'productos.*.producto_id' => 'required|exists:productos,id',
+            'productos.*.cantidad' => 'required|integer|min:1',
+            'productos.*.precio_unitario' => 'required|numeric|min:0',
+            'productos.*.precio_total' => 'required|numeric|min:0',
         ]);
 
         DB::beginTransaction();
@@ -74,10 +76,10 @@ class VentaController extends Controller
         try {
             $venta = Venta::create([
                 'cliente_id' => $request->cliente_id,
-                'usuario_id' => request()->user()->id,
-                'numero_factura' => Venta::generarNumeroFactura(),
+                'usuario_id' => $userId,
+                'numero_factura' => $request->numero_factura,
                 'fecha' => $request->fecha,
-                'monto_total' => $request->monto_total,
+                'monto_total' => $request->input('subtotal', 0),
                 'monto_descuento' => $request->monto_descuento ?? 0,
                 'total_con_iva' => $request->total_con_iva,
                 'metodo_pago' => $request->metodo_pago,
@@ -85,12 +87,12 @@ class VentaController extends Controller
             ]);
 
             // Guardar detalles de la venta
-            foreach ($request->detalles as $detalle) {
+            foreach ($request->productos as $producto) {
                 $venta->detalles()->create([
-                    'producto_id' => $detalle['producto_id'],
-                    'cantidad' => $detalle['cantidad'],
-                    'precio_unitario' => $detalle['precio_unitario'],
-                    'precio_total' => $detalle['precio_total'],
+                    'producto_id' => $producto['producto_id'],
+                    'cantidad' => $producto['cantidad'],
+                    'precio_unitario' => $producto['precio_unitario'],
+                    'precio_total' => $producto['precio_total'],
                 ]);
             }
 
@@ -105,7 +107,13 @@ class VentaController extends Controller
                 ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withInput()->withErrors(['error' => 'Error al guardar la venta: ' . $e->getMessage()]);
+            return back()
+                ->withInput()
+                ->with('swal', [
+                    'icon' => 'error',
+                    'title' => 'Error',
+                    'text' => 'Ocurrió un error al registrar la venta: ' . $e->getMessage(),
+                ]);
         }
     }
 
@@ -123,8 +131,22 @@ class VentaController extends Controller
      */
     public function destroy(Venta $venta)
     {
+        DB::beginTransaction();
+
         try {
+            // Restaurar el stock de los productos
+            foreach ($venta->detalles as $detalle) {
+                $producto = Producto::find($detalle->producto_id);
+                if ($producto) {
+                    $producto->stock += $detalle->cantidad;
+                    $producto->save();
+                }
+            }
+
+            $venta->detalles()->delete();
             $venta->delete();
+
+            DB::commit();
 
             return redirect()
                 ->route('ventas.index')
@@ -134,12 +156,13 @@ class VentaController extends Controller
                     'text' => 'La venta y sus detalles se eliminaron correctamente.',
                 ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             return redirect()
                 ->route('ventas.index')
                 ->with('swal', [
                     'icon' => 'error',
                     'title' => 'Error',
-                    'text' => 'No se pudo eliminar la venta. Puede estar relacionada con otros registros.',
+                    'text' => 'No se pudo eliminar la venta: ' . $e->getMessage(),
                 ]);
         }
     }

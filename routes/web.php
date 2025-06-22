@@ -86,6 +86,10 @@ Route::middleware(['auth'])->group(function () {
         ->name('productos.search')
         ->middleware('permission:productos.ver');
 
+    Route::get('/api/productos/searchVentas', [ProductoController::class, 'searchVentas'])
+        ->name('productos.searchVentas')
+        ->middleware('permission:productos.ver');
+
     Route::get('/api/clientes/search', [ClienteController::class, 'search'])
         ->name('clientes.search')
         ->middleware('permission:clientes.ver');

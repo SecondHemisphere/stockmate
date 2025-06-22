@@ -142,4 +142,24 @@ class ProductoController extends Controller
 
         return response()->json(['items' => $items]);
     }
+
+    public function searchVentas(Request $request)
+    {
+        $query = $request->input('q');
+
+        $productos = Producto::where('nombre', 'like', '%' . $query . '%')
+            ->limit(10)
+            ->get(['id', 'nombre', 'precio_venta', 'stock_actual']);
+
+        $items = $productos->map(function ($producto) {
+            return [
+                'id' => $producto->id,
+                'text' => $producto->nombre,
+                'precio_venta' => $producto->precio_venta,
+                'stock' => $producto->stock_actual,
+            ];
+        });
+
+        return response()->json(['items' => $items]);
+    }
 }
