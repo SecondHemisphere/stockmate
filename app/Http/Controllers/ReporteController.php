@@ -222,13 +222,17 @@ class ReporteController extends Controller
 
         if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
             $query->whereBetween('fecha_transaccion', [$request->fecha_inicio, $request->fecha_fin]);
+        } elseif ($request->filled('fecha_inicio')) {
+            $query->where('fecha_transaccion', '>=', $request->fecha_inicio);
+        } elseif ($request->filled('fecha_fin')) {
+            $query->where('fecha_transaccion', '<=', $request->fecha_fin);
         }
 
         if ($request->filled('proveedor_id')) {
             $query->where('proveedor_id', $request->proveedor_id);
         }
 
-        $compras = $query->get();
+        $compras = $query->orderBy('fecha_transaccion', 'desc')->get();
 
         $proveedores = DB::table('proveedores')->where('estado', 'ACTIVO')->get();
 
@@ -241,13 +245,17 @@ class ReporteController extends Controller
 
         if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
             $query->whereBetween('fecha_transaccion', [$request->fecha_inicio, $request->fecha_fin]);
+        } elseif ($request->filled('fecha_inicio')) {
+            $query->where('fecha_transaccion', '>=', $request->fecha_inicio);
+        } elseif ($request->filled('fecha_fin')) {
+            $query->where('fecha_transaccion', '<=', $request->fecha_fin);
         }
 
         if ($request->filled('proveedor_id')) {
             $query->where('proveedor_id', $request->proveedor_id);
         }
 
-        $compras = $query->get();
+        $compras = $query->orderBy('fecha_transaccion', 'desc')->get();
 
         $pdf = Pdf::loadView('reportes.compras-filtradas-pdf', compact('compras'));
 
@@ -260,13 +268,17 @@ class ReporteController extends Controller
 
         if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
             $query->whereBetween('fecha_transaccion', [$request->fecha_inicio, $request->fecha_fin]);
+        } elseif ($request->filled('fecha_inicio')) {
+            $query->where('fecha_transaccion', '>=', $request->fecha_inicio);
+        } elseif ($request->filled('fecha_fin')) {
+            $query->where('fecha_transaccion', '<=', $request->fecha_fin);
         }
 
         if ($request->filled('proveedor_id')) {
             $query->where('proveedor_id', $request->proveedor_id);
         }
 
-        $compras = $query->get();
+        $compras = $query->orderBy('fecha_transaccion', 'desc')->get();
 
         $headers = [
             'fecha_transaccion' => 'Fecha',
@@ -276,7 +288,7 @@ class ReporteController extends Controller
             'monto_total' => 'Monto Total',
         ];
 
-        $data = $compras->map(function ($item, $key) {
+        $data = $compras->map(function ($item) {
             return [
                 'fecha_transaccion' => \Carbon\Carbon::parse($item->fecha_transaccion)->format('d/m/Y H:i'),
                 'proveedor_nombre' => $item->proveedor_nombre,
