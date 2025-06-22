@@ -1,4 +1,4 @@
-@props(['columnas', 'filas', 'rutaBase', 'mostrarEditar' => true])
+@props(['columnas', 'filas', 'rutaBase', 'mostrarEditar' => true, 'mostrarVerDetalles' => false])
 
 <table class="overflow-x-auto">
     <thead>
@@ -51,6 +51,13 @@
 
                 <td class="border border-gray-300 px-4 py-2 text-center">
                     <div class="flex justify-center items-center gap-2 flex-wrap">
+                        @if ($mostrarVerDetalles)
+                            <a href="{{ url($rutaBase . '/' . $fila->id) }}"
+                                class="inline-block bg-stone-500 text-white px-3 py-1 rounded hover:bg-stone-600 transition">
+                                Ver
+                            </a>
+                        @endif
+
                         @if ($mostrarEditar)
                             <a href="{{ url($rutaBase . '/' . $fila->id . '/edit') }}"
                                 class="inline-block bg-teal-500 text-white px-3 py-1 rounded hover:bg-teal-600 transition">

@@ -22,11 +22,10 @@
             ['campo' => 'fecha', 'titulo' => 'Fecha', 'tipo' => 'fecha'],
             ['campo' => 'metodo_pago_nombre', 'titulo' => 'Método Pago'],
             ['campo' => 'usuario_nombre', 'titulo' => 'Registrada Por'],
-            ['campo' => 'observaciones', 'titulo' => 'Observaciones'],
         ];
     @endphp
 
-    <x-tabla-generica :columnas="$columnas" :filas="$ventas" ruta-base="ventas" :mostrarEditar="false" />
+    <x-tabla-generica :columnas="$columnas" :filas="$ventas" ruta-base="ventas" :mostrarEditar="false" :mostrarVerDetalles="true" />
 
     <x-paginacion :datos="$ventas" />
 
