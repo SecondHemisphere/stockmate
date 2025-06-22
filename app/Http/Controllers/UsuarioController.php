@@ -21,7 +21,7 @@ class UsuarioController extends Controller
                 ->orWhere('correo', 'like', "%{$search}%");
         }
 
-        $usuarios = $query->orderBy('nombre')->paginate(10)->withQueryString();
+        $usuarios = $query->orderBy('nombre')->get();
 
         return view('usuarios.index', compact('usuarios'));
     }

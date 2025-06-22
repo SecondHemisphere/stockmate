@@ -15,8 +15,7 @@ class RolController extends Controller
                 $query->where('nombre', 'like', "%{$search}%");
             })
             ->orderBy('nombre')
-            ->paginate(10)
-            ->withQueryString();
+            ->get();
 
         return view('roles.index', compact('roles'));
     }

@@ -27,8 +27,6 @@
 
     <x-tabla-generica :columnas="$columnas" :filas="$ventas" ruta-base="ventas" :mostrarEditar="false" :mostrarVerDetalles="true" />
 
-    <x-paginacion :datos="$ventas" />
-
     @push('js')
         <script src="{{ mix('js/deleteConfirmation.js') }}"></script>
     @endpush

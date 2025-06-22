@@ -23,8 +23,6 @@
 
     <x-tabla-generica :columnas="$columnas" :filas="$proveedores" ruta-base="proveedores" />
 
-    <x-paginacion :datos="$proveedores" />
-
     @push('js')
         <script src="{{ mix('js/deleteConfirmation.js') }}"></script>
     @endpush

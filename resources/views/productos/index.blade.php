@@ -28,8 +28,6 @@
 
     <x-tabla-con-imagenes :columnas="$columnas" :filas="$productos" ruta-base="productos" />
 
-    <x-paginacion :datos="$productos" />
-
     <!-- Modal para imagen-->
     <div id="image-modal"
         class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 backdrop-blur-sm backdrop-brightness-75 bg-black/30"

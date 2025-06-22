@@ -21,8 +21,6 @@
 
     <x-tabla-generica :columnas="$columnas" :filas="$categorias" ruta-base="categorias" />
 
-    <x-paginacion :datos="$categorias" />
-
     @push('js')
         <script src="{{ mix('js/deleteConfirmation.js') }}"></script>
     @endpush
