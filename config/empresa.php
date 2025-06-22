@@ -9,5 +9,4 @@ return [
     'email' => 'contacto@lapizveloz.com',
 
     'eslogan' => 'Todo en útiles escolares y materiales de oficina.',
-    'ciudad' => 'Guayaquil'
 ];

@@ -28,7 +28,7 @@
                 <div class="text-center text-teal-900">
                     <h2 class="font-bold text-xl uppercase">{{ config('empresa.nombre') }}</h2>
                     <p class="text-sm">{{ config('empresa.eslogan') }}</p>
-                    <p class="text-sm">{{ config('empresa.direccion') }}, {{ config('empresa.ciudad') }}</p>
+                    <p class="text-sm">{{ config('empresa.direccion') }}</p>
                     <p class="text-sm">Tel: {{ config('empresa.telefono') }}</p>
                     <p class="text-sm">RUC: {{ config('empresa.ruc') }}</p>
                 </div>
@@ -36,7 +36,10 @@
                 {{-- Datos Factura --}}
                 <div class="text-right text-teal-900">
                     <h1 class="font-extrabold text-3xl uppercase mb-2">Factura</h1>
-                    <p class="font-semibold text-lg">No: 001-001-{{ sprintf('%09d', $venta->numero_factura) }}</p>
+                    <p class="font-semibold text-lg">
+                        No: {{ str_pad(substr($venta->numero_factura, 4), 10, '0', STR_PAD_LEFT) }}
+                    </p>
+
                     <p class="text-sm mt-1">Fecha: {{ \Carbon\Carbon::parse($venta->fecha)->format('d/m/Y') }}</p>
                 </div>
             </div>
@@ -44,7 +47,7 @@
             {{-- Información Cliente --}}
             <div class="mb-6 p-4 bg-teal-100 rounded text-teal-900 text-sm">
                 <p><strong>Cliente:</strong> {{ $venta->cliente->nombre }}</p>
-                <p><strong>ID:</strong> {{ $venta->cliente->identificacion ?? 'N/A' }}</p>
+                <p><strong>Cédula:</strong> {{ $venta->cliente->cedula ?? 'N/A' }}</p>
                 <p><strong>Dirección:</strong> {{ $venta->cliente->direccion ?? 'N/A' }}</p>
                 <p><strong>Teléfono:</strong> {{ $venta->cliente->telefono ?? 'N/A' }}</p>
             </div>
