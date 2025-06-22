@@ -23,9 +23,7 @@
     @endphp
 
     <x-tabla-generica :columnas="$columnas" :filas="$clientes" ruta-base="clientes" />
-
-    <x-paginacion :datos="$clientes" />
-
+    
     @push('js')
         <script src="{{ mix('js/deleteConfirmation.js') }}"></script>
     @endpush
