@@ -18,7 +18,7 @@ class ClienteController extends Controller
             $query->where('nombre', 'like', "%{$search}%");
         }
 
-        $clientes = $query->orderBy('nombre')->paginate(10)->withQueryString();
+        $clientes = $query->orderBy('nombre')->paginate(20)->withQueryString();
 
         return view('clientes.index', compact('clientes'));
     }

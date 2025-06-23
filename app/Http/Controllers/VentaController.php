@@ -28,7 +28,7 @@ class VentaController extends Controller
         }
 
         $ventas = $query->orderBy('fecha', 'desc')
-            ->paginate(10)
+            ->paginate(20)
             ->withQueryString();
 
         return view('ventas.index', compact('ventas'));

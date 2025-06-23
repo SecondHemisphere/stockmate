@@ -23,7 +23,7 @@ class CompraController extends Controller
         }
 
         $compras = $query->orderBy('fecha_transaccion', 'desc')
-            ->paginate(10)
+            ->paginate(20)
             ->withQueryString();
 
         return view('compras.index', compact('compras'));

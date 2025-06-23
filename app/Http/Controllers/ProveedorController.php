@@ -18,7 +18,7 @@ class ProveedorController extends Controller
             $query->where('nombre', 'like', "%{$search}%");
         }
 
-        $proveedores = $query->orderBy('nombre')->paginate(10)->withQueryString();
+        $proveedores = $query->orderBy('nombre')->paginate(20)->withQueryString();
 
         return view('proveedores.index', compact('proveedores'));
     }

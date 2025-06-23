@@ -18,7 +18,7 @@ class CategoriaController extends Controller
             $query->where('nombre', 'like', "%{$search}%");
         }
 
-        $categorias = $query->orderBy('nombre')->paginate(10)->withQueryString();
+        $categorias = $query->orderBy('nombre')->paginate(20)->withQueryString();
 
         return view('categorias.index', compact('categorias'));
     }

@@ -26,7 +26,7 @@
         ];
     @endphp
 
-    <x-tabla-con-imagenes :columnas="$columnas" :filas="$productos" ruta-base="productos" />
+    <x-tabla-generica :columnas="$columnas" :filas="$productos" ruta-base="productos" />
 
     <!-- Modal para imagen-->
     <div id="image-modal"

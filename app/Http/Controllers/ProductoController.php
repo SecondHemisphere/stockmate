@@ -8,7 +8,6 @@ use App\Models\Proveedor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-
 class ProductoController extends Controller
 {
     public function index(Request $request)
@@ -19,7 +18,7 @@ class ProductoController extends Controller
             $query->where('nombre', 'like', "%{$search}%");
         }
 
-        $productos = $query->orderBy('nombre')->paginate(12)->withQueryString();
+        $productos = $query->orderBy('nombre')->paginate(20)->withQueryString();
 
         return view('productos.index', compact('productos'));
     }
