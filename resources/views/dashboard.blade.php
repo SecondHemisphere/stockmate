@@ -137,7 +137,8 @@
     <div class="col-span-full text-xl font-bold text-gray-700 mt-8 mb-3">Top Productos Vendidos</div>
 
     @forelse ($topVendidos as $prod)
-        <div class="flex justify-between items-center p-4 bg-white rounded-lg shadow border border-gray-200 mt-2 mb-2 mr-1">
+        <div
+            class="flex justify-between items-center p-4 bg-white rounded-lg shadow border border-gray-200 mt-2 mb-2 mr-1">
             <div class="font-semibold text-gray-700">{{ $prod->nombre }}</div>
             <div class="text-indigo-600 font-bold text-lg">{{ number_format($prod->total_vendido) }} $</div>
         </div>
