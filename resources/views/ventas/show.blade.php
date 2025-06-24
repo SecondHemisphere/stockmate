@@ -79,14 +79,14 @@
 
             {{-- Totales --}}
             <div class="text-right text-teal-900 font-semibold text-sm space-y-1">
+                <div><span>Subtotal:</span> ${{ number_format($venta->monto_total, 2, ',', '.') }}</div>
+                <div><span>Descuento:</span> -{{ $venta->porcentaje_descuento }}%</div>
+                <div><span>Monto Descontado:</span> -${{ number_format($venta->monto_descuento, 2, ',', '.') }}</div>
                 @php
-                    $subtotalNeto = $venta->monto_total - $venta->monto_descuento;
-                    $ivaCalculated = $venta->total_con_iva - $subtotalNeto;
+                    $baseImponibleIVA = $venta->monto_total - $venta->monto_descuento;
+                    $ivaCalculado = $baseImponibleIVA * 0.15;
                 @endphp
-                <div><span>Subtotal:</span> ${{ number_format($subtotalNeto, 2, ',', '.') }}</div>
-                <div><span>Descuento:</span> - {{ $venta->porcentaje_descuento }}%</div>
-                <div><span>Monto Descontado:</span> - ${{ number_format($venta->monto_descuento, 2, ',', '.') }}</div>
-                <div><span>IVA 12%:</span> ${{ number_format($ivaCalculated, 2, ',', '.') }}</div>
+                <div><span>IVA 15%:</span> ${{ number_format($ivaCalculado, 2, ',', '.') }}</div>
                 <div class="text-xl border-t border-teal-400 mt-2 pt-2 font-bold uppercase">Total:
                     ${{ number_format($venta->total_con_iva, 2, ',', '.') }}</div>
             </div>
