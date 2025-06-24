@@ -137,29 +137,36 @@
         </div>
 
         <!-- Totales -->
-        <div class="bg-gray-50 p-4 rounded-md mt-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="text-right">
-                    <p class="font-semibold">Subtotal:</p>
-                    <input type="text" id="subtotal" value="0.00"
-                        class="w-full px-2 py-1 border border-gray-300 rounded-md text-right bg-white" readonly>
+        <div class="bg-emerald-50 p-4 rounded-md mt-4">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div class="text-center">
+                    <p class="font-semibold">Subtotal</p>
+                    <input type="text" id="subtotalDisplay" value="0.00"
+                        class="w-full px-2 py-1 border border-gray-300 rounded-md text-right font-bold bg-emerald-200"
+                        readonly>
                 </div>
-                <div class="text-right">
-                    <p class="font-semibold">Descuento:</p>
-                    <input type="number" id="descuento" name="porcentaje_descuento"
+                <div class="text-center">
+                    <p class="font-semibold">Descuento (%)</p>
+                    <input type="number" id="porcentajeDescuentoInput" name="porcentaje_descuento"
                         value="{{ old('porcentaje_descuento', 0) }}" min="0" step="1"
-                        class="w-full px-2 py-1 border border-gray-300 rounded-md text-right">
+                        class="w-full px-2 py-1 border border-gray-300 rounded-md text-right bg-white">
                 </div>
-                <div class="text-right">
-                    <p class="font-semibold">IVA (15%):</p>
-                    <input type="text" id="iva" value="0.00"
-                        class="w-full px-2 py-1 border border-gray-300 rounded-md text-right bg-white" readonly>
+                <div class="text-center">
+                    <p class="font-semibold">Monto Descontado</p>
+                    <input type="text" id="montoDescuentoDisplay" value="0.00"
+                        class="w-full px-2 py-1 border border-gray-300 rounded-md text-right font-bold bg-emerald-200">
                 </div>
-                <div class="text-right">
-                    <p class="font-semibold">Total:</p>
-                    <input type="text" id="total" name="total_con_iva"
+                <div class="text-center">
+                    <p class="font-semibold">IVA (15%)</p>
+                    <input type="text" id="ivaDisplay" value="0.00"
+                        class="w-full px-2 py-1 border border-gray-300 rounded-md text-right font-bold bg-emerald-200"
+                        readonly>
+                </div>
+                <div class="text-center">
+                    <p class="font-semibold">Total</p>
+                    <input type="text" id="totalFinalDisplay" name="total_con_iva"
                         value="{{ old('total_con_iva', 0.0) }}"
-                        class="w-full px-2 py-1 border border-gray-300 rounded-md text-right bg-white font-bold"
+                        class="w-full px-2 py-1 border border-gray-300 rounded-md text-right font-bold bg-emerald-200"
                         readonly>
                 </div>
             </div>
@@ -361,19 +368,30 @@
 
         // --------------------- TOTALES ---------------------
         function actualizarTotales() {
-            let subtotal = 0;
+            let subtotalNeto = 0;
             document.querySelectorAll('.precio-total').forEach(input => {
-                subtotal += parseFloat(input.value) || 0;
+                subtotalNeto += parseFloat(input.value) || 0;
             });
 
-            const descuento = parseFloat(document.getElementById('descuento').value) || 0;
-            const iva = (subtotal - descuento) * 0.15;
-            const total = subtotal - descuento + iva;
+            const porcentajeDescuento = parseFloat(document.getElementById('porcentajeDescuentoInput').value) ||
+                0;
+            const montoDescuento = subtotalNeto * (porcentajeDescuento / 100);
+            const baseImponibleIVA = subtotalNeto - montoDescuento;
+            const tasaIVA = 0.15;
+            const ivaCalculado = baseImponibleIVA * tasaIVA;
+            const totalFinalConIVA = baseImponibleIVA + ivaCalculado;
 
-            document.getElementById('subtotal').value = subtotal.toFixed(2);
-            document.getElementById('iva').value = iva.toFixed(2);
-            document.getElementById('total').value = total.toFixed(2);
-            document.querySelector('input[name="total_con_iva"]').value = total.toFixed(2);
+            document.getElementById('subtotalDisplay').value = subtotalNeto.toFixed(
+                2);
+            document.getElementById('montoDescuentoDisplay').value = montoDescuento.toFixed(
+                2);
+            document.getElementById('ivaDisplay').value = ivaCalculado.toFixed(2);
+            document.getElementById('totalFinalDisplay').value = totalFinalConIVA.toFixed(2);
+
+            const totalConIvaHiddenInput = document.querySelector('input[name="total_con_iva"]');
+            if (totalConIvaHiddenInput) {
+                totalConIvaHiddenInput.value = totalFinalConIVA.toFixed(2);
+            }
         }
 
         // --------------------- INICIALIZAR ---------------------
@@ -435,7 +453,7 @@
         });
 
         // --------------------- DESCUENTO ---------------------
-        document.getElementById('descuento').addEventListener('input', actualizarTotales);
+        document.getElementById('porcentajeDescuentoInput').addEventListener('input', actualizarTotales);
 
         // --------------------- INICIO ---------------------
         actualizarTotales();
