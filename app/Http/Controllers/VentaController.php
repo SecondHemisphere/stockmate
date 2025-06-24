@@ -52,13 +52,12 @@ class VentaController extends Controller
      */
     public function store(Request $request)
     {
-        $userId = request()->user()->id;
+        $userId = $request->user()->id;
 
         $request->validate([
             'cliente_id' => 'required|exists:clientes,id',
             'fecha' => 'required|date',
-            'total_con_iva' => 'required|numeric|min:0',
-            'monto_descuento' => 'nullable|numeric|min:0',
+            'porcentaje_descuento' => 'required|numeric|min:0',
             'metodo_pago' => 'required|in:EFECTIVO,TARJETA_CREDITO,TARJETA_DEBITO,TRANSFERENCIA,OTRO',
             'observaciones' => 'nullable|string',
             'numero_factura' => 'required|unique:ventas,numero_factura',
@@ -67,8 +66,6 @@ class VentaController extends Controller
             'productos' => 'required|array|min:1',
             'productos.*.producto_id' => 'required|exists:productos,id',
             'productos.*.cantidad' => 'required|integer|min:1',
-            'productos.*.precio_unitario' => 'required|numeric|min:0',
-            'productos.*.precio_total' => 'required|numeric|min:0',
         ]);
 
         DB::beginTransaction();
@@ -79,9 +76,7 @@ class VentaController extends Controller
                 'usuario_id' => $userId,
                 'numero_factura' => $request->numero_factura,
                 'fecha' => $request->fecha,
-                'monto_total' => $request->input('subtotal', 0),
-                'monto_descuento' => $request->monto_descuento ?? 0,
-                'total_con_iva' => $request->total_con_iva,
+                'porcentaje_descuento' => $request->porcentaje_descuento,
                 'metodo_pago' => $request->metodo_pago,
                 'observaciones' => $request->observaciones,
             ]);
@@ -91,8 +86,6 @@ class VentaController extends Controller
                 $venta->detalles()->create([
                     'producto_id' => $producto['producto_id'],
                     'cantidad' => $producto['cantidad'],
-                    'precio_unitario' => $producto['precio_unitario'],
-                    'precio_total' => $producto['precio_total'],
                 ]);
             }
 
@@ -134,16 +127,14 @@ class VentaController extends Controller
         DB::beginTransaction();
 
         try {
-            // Restaurar el stock de los productos
             foreach ($venta->detalles as $detalle) {
                 $producto = Producto::find($detalle->producto_id);
                 if ($producto) {
-                    $producto->stock += $detalle->cantidad;
+                    $producto->stock_actual += $detalle->cantidad;
                     $producto->save();
                 }
             }
 
-            $venta->detalles()->delete();
             $venta->delete();
 
             DB::commit();

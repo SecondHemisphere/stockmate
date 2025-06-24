@@ -146,8 +146,8 @@
                 </div>
                 <div class="text-right">
                     <p class="font-semibold">Descuento:</p>
-                    <input type="number" id="descuento" name="monto_descuento"
-                        value="{{ old('monto_descuento', 0) }}" min="0" step="0.01"
+                    <input type="number" id="descuento" name="porcentaje_descuento"
+                        value="{{ old('porcentaje_descuento', 0) }}" min="0" step="0.01"
                         class="w-full px-2 py-1 border border-gray-300 rounded-md text-right">
                 </div>
                 <div class="text-right">
