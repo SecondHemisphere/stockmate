@@ -46,6 +46,10 @@
                                     {{ $valor !== null ? '$' . number_format($valor, 2, ',', '.') : '-' }}
                                 @break
 
+                                @case('porcentaje')
+                                    {{ $valor !== null ? '%' . $valor : '-' }}
+                                @break
+
                                 @case('imagen')
                                     @if ($valor)
                                         <img src="{{ asset('storage/' . $valor) }}" alt="{{ $fila->nombre ?? '' }}"

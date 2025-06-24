@@ -24,7 +24,6 @@ class Venta extends Model
 
     protected $casts = [
         'monto_total' => 'decimal:2',
-        'porcentaje_descuento' => 'decimal:2',
         'monto_descuento' => 'decimal:2',
         'total_con_iva' => 'decimal:2',
         'fecha' => 'datetime',

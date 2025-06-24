@@ -84,7 +84,7 @@
                     $ivaCalculated = $venta->total_con_iva - $subtotalNeto;
                 @endphp
                 <div><span>Subtotal:</span> ${{ number_format($subtotalNeto, 2, ',', '.') }}</div>
-                <div><span>Descuento:</span> - {{ number_format($venta->porcentaje_descuento, 2, ',', '.') }}%</div>
+                <div><span>Descuento:</span> - {{ $venta->porcentaje_descuento }}%</div>
                 <div><span>Monto Descontado:</span> - ${{ number_format($venta->monto_descuento, 2, ',', '.') }}</div>
                 <div><span>IVA 12%:</span> ${{ number_format($ivaCalculated, 2, ',', '.') }}</div>
                 <div class="text-xl border-t border-teal-400 mt-2 pt-2 font-bold uppercase">Total:
